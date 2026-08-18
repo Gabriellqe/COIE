@@ -1,0 +1,80 @@
+# Commerce Opportunity Intelligence Engine (COIE)
+
+Motor de inteligencia comercial para detectar, analizar, validar y priorizar oportunidades basadas en evidencia.
+
+> Estado: **Sprint 0 — Project Foundation**  
+> Fase del producto: **Discovery / Product Definition**
+
+## Propósito
+
+COIE transforma datos dispersos de marketplaces, proveedores, precios, demanda, competencia y ventas propias en recomendaciones comerciales explicables. El sistema no intenta responder simplemente «qué producto vender», sino qué oportunidad ofrece la mejor combinación de evidencia, rentabilidad, recurrencia, velocidad y riesgo.
+
+## Alcance inicial
+
+El MVP se concentra en dos tipos de oportunidad:
+
+- `RESALE`: productos usados potencialmente infravalorados.
+- `REPLENISHMENT`: consumibles o repuestos con demanda recurrente.
+
+Los demás tipos permanecen modelados para evolución futura, pero no forman parte de la implementación inicial.
+
+## Documentación principal
+
+- [[PRODUCT_VISION]] — visión, principios y métricas de éxito.
+- [[PRD]] — requisitos del MVP y criterios de aceptación.
+- [[ROADMAP]] — fases, resultados y puertas de avance.
+- [[BACKLOG]] — trabajo priorizado y trazable.
+- [[CONTEXT]] — contexto operativo para Codex y colaboradores.
+- [[SYSTEM_ARCHITECTURE]] — límites, componentes y flujo del sistema.
+- [[DATA_MODEL]] — entidades, relaciones y reglas de datos.
+- [[AGENT_ARCHITECTURE]] — responsabilidades y contratos de agentes.
+- [[SCORING_MODEL]] — scores, fórmula inicial y explicabilidad.
+- [[EPICS]] — épicas del producto.
+- [[USER_STORIES]] — historias iniciales y aceptación.
+- [[SPRINTS]] — índice y reglas de sprints.
+
+## Estructura
+
+```text
+.
+├── README.md
+├── Commerce_Opportunity_Intelligence_Engine_MASTER.md
+├── PRODUCT_VISION.md
+├── PRD.md
+├── ROADMAP.md
+├── BACKLOG.md
+├── CONTEXT.md
+├── docs/
+│   ├── architecture/
+│   ├── product/
+│   ├── research/
+│   └── decisions/
+├── agile/
+│   └── sprints/
+├── agents/
+├── experiments/
+├── ideas/
+└── changelog/
+```
+
+## Forma de trabajo
+
+1. Registrar una idea antes de incorporarla al alcance.
+2. Clasificarla como `Idea`, `Research`, `Decision`, `Epic`, `Feature`, `User Story`, `Experiment` o `Architecture`.
+3. Vincular toda tarea a una historia o a una actividad explícita del Sprint 0.
+4. Exigir procedencia y fecha a toda evidencia externa.
+5. Probar con poco capital antes de escalar.
+6. Registrar predicción y resultado para cerrar el ciclo de aprendizaje.
+
+## Principios
+
+- **Evidence before inventory**.
+- **Test before scale**.
+- **Capital efficiency**.
+- **Data accumulation**.
+- **Explainable recommendations**.
+- **Modular architecture**.
+
+## Fuente
+
+El archivo [[Commerce_Opportunity_Intelligence_Engine_MASTER]] conserva el planteamiento original. Los documentos separados son la referencia operativa y deben actualizarse junto con [[CHANGELOG]] cuando una decisión cambie el producto.
