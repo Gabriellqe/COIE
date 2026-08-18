@@ -1,7 +1,7 @@
 ---
 type: backlog
 status: active
-updated: 2026-08-12
+updated: 2026-08-18
 ---
 
 # Backlog
@@ -21,13 +21,13 @@ updated: 2026-08-12
 | FND-003 | Registrar decisiones iniciales | P0 | DONE | ADR-001 y log de decisiones creados |
 | FND-004 | Definir arquitectura lógica | P0 | DONE | límites, flujo, datos y agentes documentados |
 | FND-005 | Definir scoring v0.1.0 | P0 | DONE | pesos, gates, cobertura y explicación documentados |
-| FND-006 | Definir mercado/moneda inicial | P0 | READY | ADR aceptado con alcance y razones |
-| FND-007 | Seleccionar primera fuente autorizada | P0 | READY | acceso, límites y campos comprobados |
-| FND-008 | Seleccionar stack y persistencia | P0 | READY | ADR aceptado con opciones y consecuencias |
-| FND-009 | Crear esqueleto ejecutable | P0 | PLANNED | aplicación, pruebas y comandos básicos operativos |
-| FND-010 | Crear fixtures y esquema canónico | P0 | PLANNED | dataset reproducible y validado |
-| FND-011 | Configurar calidad automática | P0 | PLANNED | formato, pruebas y revisión de enlaces ejecutables |
-| FND-012 | Acordar benchmark manual del MVP | P0 | READY | protocolo y métricas congelados |
+| FND-006 | Definir mercado/moneda inicial | P0 | DONE | ADR aceptado con alcance y razones |
+| FND-007 | Seleccionar primera fuente autorizada | P0 | IN_PROGRESS | acceso, límites y campos comprobados |
+| FND-008 | Seleccionar stack y persistencia | P0 | DONE | ADR aceptado con opciones y consecuencias |
+| FND-009 | Crear esqueleto ejecutable | P0 | DONE | aplicación, pruebas y comandos básicos operativos |
+| FND-010 | Crear fixture y perfil canónico Foundation | P0 | DONE | dataset DEMO parcial, reproducible y validado |
+| FND-011 | Configurar calidad automática | P0 | DONE | formato, pruebas y revisión de enlaces ejecutables |
+| FND-012 | Acordar benchmark manual del MVP | P0 | DONE | protocolo y métricas congelados |
 
 ## P0 — Flujo vertical MVP
 
@@ -52,6 +52,7 @@ updated: 2026-08-12
 | SC-003 | EPIC-08 / US-007 | Implementar gates y explicación | PLANNED |
 | OP-001 | EPIC-04 / US-008 | Crear oportunidad y máquina de estados | PLANNED |
 | OP-002 | EPIC-04 / US-006 | Entregar listado/ranking inicial | PLANNED |
+| AU-001 | EPIC-11 / US-009 | Implementar login, workspace personal y aislamiento RLS | PLANNED |
 
 ## P1 — Reposición, tablero y experimentación
 
@@ -60,7 +61,7 @@ updated: 2026-08-12
 | RP-001 | EPIC-05 / US-020 | Modelar `ProductEcosystem` y `BaseProduct` | PLANNED |
 | RP-002 | EPIC-05 / US-021 | Registrar compatibilidades y evidencia | PLANNED |
 | RP-003 | EPIC-05 / US-020 | Estimar intervalo y score de reposición | PLANNED |
-| UI-001 | EPIC-08 / US-006 | Dashboard con filtros y detalle | PLANNED |
+| UI-001 | EPIC-08 / US-006 | Dashboard A operativo con detalle analítico B | PLANNED |
 | EX-001 | EPIC-09 / US-030 | Crear y aprobar experimentos | PLANNED |
 | EX-002 | EPIC-09 / US-031 | Registrar métricas reales | PLANNED |
 | EX-003 | EPIC-09 / US-031 | Comparar predicción y resultado | PLANNED |

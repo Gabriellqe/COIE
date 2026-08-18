@@ -1,8 +1,8 @@
 ---
 type: architecture
 status: proposed
-version: 0.1
-updated: 2026-08-12
+version: 0.2
+updated: 2026-08-18
 ---
 
 # Arquitectura del sistema
@@ -70,14 +70,23 @@ Una capa sólo utiliza contratos de la capa inferior o puertos explícitos. Un c
 
 ### 5.1 Experience
 
-- **Opportunity Dashboard:** ranking, filtros, cobertura y estados.
-- **Opportunity Detail:** evidencia, economía, scores, riesgos y recomendación.
+- **Opportunity Dashboard A:** ranking operativo, filtros, cobertura y estados.
+- **Opportunity Detail B:** evidencia, distribución de precios, economía, scores, riesgos y recomendación.
 - **Experiment Workspace:** hipótesis, límites, métricas y comparación predicción/resultado.
 - **Data Quality View:** datos faltantes, antigüedad, conflictos y fallos de fuentes.
 
-La primera interfaz puede ser CLI o web. Debe consumir los mismos casos de uso.
+La primera interfaz es web. Durante Foundation consume un repositorio DEMO mediante los mismos puertos que utilizará la persistencia real.
 
-### 5.2 Application Services
+### 5.2 Identity & Access
+
+- Supabase Auth será el proveedor de identidad del MVP.
+- `Workspace` define el límite de propiedad y colaboración.
+- `WorkspaceMember` concede acceso explícito.
+- Las entidades comerciales incluyen `workspace_id`.
+- PostgreSQL Row Level Security aplicará el aislamiento cuando se integre Supabase.
+- Foundation modela el contrato, pero no simula una autenticación real sin proyecto ni credenciales.
+
+### 5.3 Application Services
 
 - `AnalyzeProduct`: coordina identidad, observaciones, economía y scoring.
 - `RefreshMarketEvidence`: actualiza señales sin borrar el histórico.
@@ -87,7 +96,7 @@ La primera interfaz puede ser CLI o web. Debe consumir los mismos casos de uso.
 - `RecordExperimentObservation`: incorpora métricas reales.
 - `CloseExperiment`: compara resultado y recomienda decisión humana.
 
-### 5.3 Domain Intelligence
+### 5.4 Domain Intelligence
 
 - **Product Intelligence:** identidad, atributos, variantes y normalización.
 - **Market Intelligence:** comparables, estadísticas, demanda y competencia.
@@ -97,7 +106,7 @@ La primera interfaz puede ser CLI o web. Debe consumir los mismos casos de uso.
 - **Risk:** señales regulatorias, falsificación, devolución, dependencia y obsolescencia.
 - **Scoring:** normalización, agregación, confianza, gates y explicación.
 
-### 5.4 Acquisition
+### 5.5 Acquisition
 
 Todo conector implementa conceptualmente:
 
@@ -117,7 +126,7 @@ Acquire → Persist Raw → Validate → Map → Resolve Identity
 
 `Persist Raw` es opcional cuando la licencia o los términos impiden conservar el contenido original; en ese caso se conserva únicamente la procedencia permitida y el registro del método.
 
-### 5.5 Knowledge & Storage
+### 5.6 Knowledge & Storage
 
 Almacena:
 
@@ -186,6 +195,8 @@ Los timestamps se almacenan en UTC y se muestran en la zona del usuario.
 - Acceso mínimo necesario a fuentes y almacenamiento.
 - Sanitización de contenido externo antes de mostrarlo o procesarlo.
 - Lista permitida de conectores y métodos de captura.
+- La carga manual registra por separado la fuente externa y `MANUAL_USER_ENTRY` como método.
+- Una página pública no se considera automáticamente autorizada para scraping.
 - Registro de licencias, términos, rate limits y política de retención por fuente.
 - Aprobación humana antes de desplegar capital, publicar o contactar proveedores.
 
@@ -213,12 +224,10 @@ Por ejecución se registran:
 
 ## 13. Decisiones abiertas
 
-- stack y estrategia de despliegue;
-- base de datos inicial y manejo de históricos;
 - cola/eventos sólo si el volumen lo justifica;
 - almacenamiento de capturas crudas según cada fuente;
 - primer conector real y su mecanismo autorizado;
-- interfaz inicial.
+- reglas cuantitativas de frescura y calibración.
 
 No se introduce infraestructura distribuida antes de que exista una necesidad medible.
 
@@ -228,4 +237,8 @@ No se introduce infraestructura distribuida antes de que exista una necesidad me
 - [[DATA_MODEL]]
 - [[AGENT_ARCHITECTURE]]
 - [[SCORING_MODEL]]
+- [[ADR-002]]
+- [[ADR-003]]
+- [[ADR-004]]
+- [[ADR-005]]
 - [[ADR-001]]

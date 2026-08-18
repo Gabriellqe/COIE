@@ -1,8 +1,8 @@
 ---
 type: prd
 status: draft
-version: 0.1
-updated: 2026-08-12
+version: 0.2
+updated: 2026-08-18
 ---
 
 # Product Requirements Document — MVP
@@ -10,6 +10,8 @@ updated: 2026-08-12
 ## 1. Objetivo
 
 Demostrar que COIE puede analizar productos y priorizar oportunidades `RESALE` y `REPLENISHMENT` de forma más consistente, trazable y reutilizable que una investigación manual básica.
+
+El primer incremento se valida en Chile, con `CLP` como moneda base y un caso `RESALE` de repuesto usado asociado a NK150. Esta elección no limita la arquitectura a un único mercado o categoría.
 
 ## 2. Alcance funcional
 
@@ -76,6 +78,7 @@ Evidence Summary
 | RF-016 | Listar y ordenar oportunidades en un tablero. | P1 |
 | RF-017 | Filtrar el tablero por tipo, estado, score, riesgo y vigencia. | P1 |
 | RF-018 | Conservar un log de cambios de estado y de versiones del score. | P1 |
+| RF-019 | Autenticar usuarios y aislar datos comerciales por workspace. | P0 |
 
 ## 4. Reglas de negocio
 
@@ -172,6 +175,11 @@ Status
 Updated At
 ```
 
+La experiencia combina dos niveles:
+
+- vista A operativa para listado, filtros, estado y revisión rápida;
+- vista B analítica para detalle de precios, evidencia, faltantes, score y explicación.
+
 ## 8. Requisitos no funcionales
 
 | ID | Requisito |
@@ -186,6 +194,7 @@ Updated At
 | RNF-008 | Cumplimiento: cada conector debe respetar términos, límites y restricciones de la fuente. |
 | RNF-009 | Portabilidad: el modelo de dominio no dependerá del formato particular de un marketplace. |
 | RNF-010 | Observabilidad: cada ejecución debe informar fuente, duración, registros procesados y errores. |
+| RNF-011 | Aislamiento: una persona no puede acceder a entidades de un workspace sin membresía válida. |
 
 Los objetivos cuantitativos de rendimiento se definirán después de elegir las primeras fuentes y el stack mediante ADR.
 
@@ -204,13 +213,11 @@ El incremento se acepta cuando:
 
 ## 10. Dependencias y decisiones pendientes
 
-- primer mercado, país y moneda base;
 - primeras fuentes con acceso permitido;
-- stack de aplicación y persistencia;
-- interfaz inicial: CLI, web o ambas;
-- método inicial de autenticación si existe más de un usuario;
 - umbrales de frescura por tipo de señal;
 - pesos iniciales de scoring calibrados mediante revisión experta.
+
+Mercado, stack, interfaz y estrategia de autenticación fueron resueltos mediante [[ADR-002]], [[ADR-004]] y [[ADR-005]]. La primera fuente real autorizada continúa pendiente; la carga manual trazable de [[ADR-003]] permite avanzar sin asumir autorización de automatización.
 
 Estas decisiones deben resolverse como ADR antes de afectar implementación irreversible.
 

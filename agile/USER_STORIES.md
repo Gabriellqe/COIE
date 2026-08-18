@@ -1,7 +1,7 @@
 ---
 type: user-story-index
 status: active
-updated: 2026-08-12
+updated: 2026-08-18
 ---
 
 # Historias de usuario iniciales
@@ -94,6 +94,20 @@ Como operador, quiero mover una oportunidad por un ciclo controlado para mantene
 - actor, fecha y motivo quedan registrados;
 - rechazo exige motivo;
 - reabrir exige nueva evidencia.
+
+## US-009 — Acceder a un espacio de trabajo aislado
+
+Como integrante del equipo, quiero iniciar sesión y trabajar dentro de un espacio autorizado para que mis datos no sean visibles a personas ajenas.
+
+### Aceptación
+
+- permite iniciar y cerrar sesión con correo y contraseña;
+- cada usuario recibe un workspace personal predeterminado;
+- todas las entidades comerciales se consultan dentro del workspace activo;
+- un usuario no puede leer ni modificar datos de un workspace sin membresía;
+- un workspace compartido sólo permite acceso a miembros registrados;
+- las pruebas cubren intento de acceso cruzado;
+- no se almacenan contraseñas en tablas de dominio ni en el repositorio.
 
 ## US-020 — Estimar reposición
 

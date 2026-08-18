@@ -2,8 +2,8 @@
 
 Motor de inteligencia comercial para detectar, analizar, validar y priorizar oportunidades basadas en evidencia.
 
-> Estado: **Sprint 0 — Project Foundation**  
-> Fase del producto: **Discovery / Product Definition**
+> Estado: **Sprint 0 — Project Foundation (`IN_PROGRESS`)**
+> Fase del producto: **Foundation técnica con esqueleto ejecutable**
 
 ## Propósito
 
@@ -18,6 +18,40 @@ El MVP se concentra en dos tipos de oportunidad:
 
 Los demás tipos permanecen modelados para evolución futura, pero no forman parte de la implementación inicial.
 
+El primer caso vertical usa Chile, `CLP` y un repuesto usado asociado a NK150 con datos totalmente sintéticos. Mercado Libre Chile y Facebook Marketplace son fuentes candidatas; no existe todavía un conector autorizado.
+
+## Aplicación local
+
+El Sprint 0 incluye un shell web A+B:
+
+- dashboard operativo A en `/`;
+- detalle analítico B en `/opportunities/opportunity-demo-001`;
+- fixture canónico DEMO sin credenciales ni red;
+- estadísticas de precio por condición, tipo de precio y moneda;
+- validación de contratos, documentación y build.
+
+### Requisitos
+
+- Node.js 24 o superior;
+- pnpm 11.19.0.
+
+### Ejecutar
+
+```powershell
+pnpm install --frozen-lockfile
+pnpm dev
+```
+
+Abrir `http://localhost:3000`.
+
+### Validar
+
+```powershell
+pnpm check
+```
+
+El comando ejecuta formato, lint, tipos, pruebas, enlaces documentales y build de producción. Sprint 0 funciona sin Supabase; las variables objetivo están documentadas en `.env.example`.
+
 ## Documentación principal
 
 - [[PRODUCT_VISION]] — visión, principios y métricas de éxito.
@@ -25,6 +59,7 @@ Los demás tipos permanecen modelados para evolución futura, pero no forman par
 - [[ROADMAP]] — fases, resultados y puertas de avance.
 - [[BACKLOG]] — trabajo priorizado y trazable.
 - [[CONTEXT]] — contexto operativo para Codex y colaboradores.
+- [[AGENTS]] — reglas permanentes para Codex y subagentes.
 - [[SYSTEM_ARCHITECTURE]] — límites, componentes y flujo del sistema.
 - [[DATA_MODEL]] — entidades, relaciones y reglas de datos.
 - [[AGENT_ARCHITECTURE]] — responsabilidades y contratos de agentes.
@@ -44,6 +79,12 @@ Los demás tipos permanecen modelados para evolución futura, pero no forman par
 ├── ROADMAP.md
 ├── BACKLOG.md
 ├── CONTEXT.md
+├── AGENTS.md
+├── package.json
+├── src/
+├── fixtures/
+├── tests/
+├── scripts/
 ├── docs/
 │   ├── architecture/
 │   ├── product/

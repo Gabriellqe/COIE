@@ -1,8 +1,8 @@
 ---
 type: product-spec
 status: accepted
-version: 0.1
-updated: 2026-08-12
+version: 0.2
+updated: 2026-08-18
 ---
 
 # Tipos de oportunidad
@@ -45,6 +45,8 @@ Inputs mínimos:
 - riesgo de defecto, fraude, devolución y tiempo de venta.
 
 La diferencia entre precio pedido y precio vendido debe ser explícita.
+
+Un repuesto puede participar en `RESALE` cuando la unidad de análisis es un artículo usado concreto adquirido para reventa. La condición de repuesto no lo convierte por sí sola en `REPLENISHMENT`; ese tipo exige una hipótesis de recurrencia, compatibilidad y abastecimiento de SKU.
 
 ## `REPLENISHMENT`
 

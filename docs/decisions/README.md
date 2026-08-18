@@ -5,6 +5,10 @@ Las decisiones que cambian arquitectura, alcance, datos, seguridad o forma de tr
 ## Índice
 
 - [[ADR-001]] — Resale Intelligence pasa a ser un módulo de COIE — `Accepted`.
+- [[ADR-002]] — Mercado inicial Chile y moneda CLP — `Accepted`.
+- [[ADR-003]] — Adquisición inicial mediante carga manual trazable — `Accepted`.
+- [[ADR-004]] — Stack e interfaz web inicial — `Accepted`.
+- [[ADR-005]] — Autenticación e aislamiento mediante espacios de trabajo — `Accepted`.
 
 ## Estados
 

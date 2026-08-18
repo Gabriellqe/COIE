@@ -1,7 +1,7 @@
 ---
 type: project-context
 status: active
-updated: 2026-08-12
+updated: 2026-08-18
 ---
 
 # Contexto operativo
@@ -12,6 +12,15 @@ updated: 2026-08-12
 **Fase:** Discovery / Product Definition; Sprint 0 iniciado.  
 **Idioma del proyecto:** español; identificadores de dominio y código en inglés consistente.  
 **Fuente histórica:** [[Commerce_Opportunity_Intelligence_Engine_MASTER]].
+
+## Decisiones vigentes del primer incremento
+
+- Mercado: Chile (`CL`), moneda `CLP`, presentación en `America/Santiago` y persistencia temporal UTC.
+- Caso inicial: `RESALE` de un repuesto usado asociado a NK150; fixtures marcados `DEMO`.
+- Adquisición inicial: carga manual trazable; Mercado Libre Chile y Facebook Marketplace son fuentes candidatas pendientes de revisión de acceso.
+- Stack: Next.js, React, TypeScript y PostgreSQL/Supabase; ejecución Foundation mediante adaptador DEMO sin red.
+- Interfaz: dashboard A para operación y vista B para detalle analítico.
+- Usuarios: autenticación futura con Supabase Auth y aislamiento por `workspace_id`/RLS.
 
 ## Objetivo inmediato
 
@@ -83,9 +92,11 @@ No convertir una idea directamente en trabajo P0 sin hipótesis, valor y relaci�
 
 ## Convenciones técnicas provisionales
 
-Hasta decidir el stack:
+Durante Foundation y antes de integrar Supabase:
 
 - modelo de dominio independiente de conectores;
+- una aplicación Next.js en la raíz del repositorio;
+- puerto de persistencia con adaptador DEMO reproducible;
 - dinero decimal + moneda;
 - timestamps UTC;
 - IDs internos estables;
@@ -109,10 +120,10 @@ Aplicar la Definition of Done de [[USER_STORIES]]. En documentación, además:
 
 Pendientes de decisión humana/ADR:
 
-- mercado, país y moneda del primer incremento;
 - primera fuente con acceso permitido;
-- stack, persistencia e interfaz inicial;
-- umbrales de frescura y benchmark;
+- umbrales de frescura y ejecución completa B0/B1;
 - límites de capital para experimentos reales.
+
+La estrategia de autenticación está decidida, pero su integración requiere crear el proyecto Supabase. El benchmark B1 requiere una pieza/variante NK150 real y evidencia permitida.
 
 Mientras estén pendientes, se puede avanzar con contratos, fixtures y lógica pura, pero no asumir silenciosamente valores comerciales reales.

@@ -1,7 +1,7 @@
 ---
 type: epic-index
 status: active
-updated: 2026-08-12
+updated: 2026-08-18
 ---
 
 # Épicas
@@ -20,6 +20,7 @@ updated: 2026-08-12
 | EPIC-08 | Opportunity Scoring | ranking explicable y versionado | P0 | EPIC-03, EPIC-07 |
 | EPIC-09 | Experimentation | pruebas y resultados medibles | P1 | EPIC-08 |
 | EPIC-10 | Learning | calibración con resultados reales | P2 | EPIC-09 |
+| EPIC-11 | Platform Access | identidad, workspaces y aislamiento de datos | P0 | Foundation |
 
 ## EPIC-01 — Data Acquisition
 
@@ -108,6 +109,16 @@ updated: 2026-08-12
 **Objetivo:** medir error por cohorte y versionar mejoras de reglas y pesos.
 
 **Criterio de salida:** existe suficiente historial, una evaluación retrospectiva y un cambio versionado que mejora métricas fuera de muestra.
+
+## EPIC-11 — Platform Access
+
+**Problema:** varios usuarios necesitan trabajar sin exponer datos de otros espacios ni duplicar físicamente la plataforma.
+
+**Objetivo:** autenticar usuarios y aislar datos comerciales por workspace, permitiendo colaboración explícita.
+
+**Incluye:** login, logout, workspace personal, membresías, selección de contexto y políticas RLS.
+
+**Criterio de salida:** usuarios autenticados sólo pueden leer o modificar workspaces autorizados y existen pruebas negativas de acceso cruzado.
 
 ## Reglas de gestión
 

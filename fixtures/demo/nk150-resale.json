@@ -1,0 +1,364 @@
+{
+  "schemaVersion": "0.1.0",
+  "datasetKind": "DEMO",
+  "generatedAt": "2026-08-18T12:00:00Z",
+  "workspace": {
+    "id": "ws-demo-personal",
+    "name": "Espacio personal DEMO",
+    "type": "PERSONAL"
+  },
+  "market": {
+    "id": "market-cl",
+    "name": "Chile",
+    "countryCode": "CL",
+    "currencyCode": "CLP",
+    "timezone": "America/Santiago"
+  },
+  "dataSources": [
+    {
+      "id": "source-ml-cl",
+      "name": "Mercado Libre Chile",
+      "accessMethod": "MANUAL_USER_ENTRY",
+      "status": "PENDING_TERMS_REVIEW"
+    },
+    {
+      "id": "source-fb-cl",
+      "name": "Facebook Marketplace",
+      "accessMethod": "MANUAL_USER_ENTRY",
+      "status": "PENDING_TERMS_REVIEW"
+    }
+  ],
+  "marketplaces": [
+    {
+      "id": "marketplace-ml-cl",
+      "marketId": "market-cl",
+      "dataSourceId": "source-ml-cl",
+      "name": "Mercado Libre Chile"
+    },
+    {
+      "id": "marketplace-fb-cl",
+      "marketId": "market-cl",
+      "dataSourceId": "source-fb-cl",
+      "name": "Facebook Marketplace Chile"
+    }
+  ],
+  "captureRuns": [
+    {
+      "id": "capture-demo-001",
+      "workspaceId": "ws-demo-personal",
+      "sourceId": "source-ml-cl",
+      "method": "MANUAL_USER_ENTRY",
+      "status": "COMPLETE",
+      "startedAt": "2026-08-18T11:00:00Z",
+      "completedAt": "2026-08-18T11:10:00Z"
+    },
+    {
+      "id": "capture-demo-002",
+      "workspaceId": "ws-demo-personal",
+      "sourceId": "source-fb-cl",
+      "method": "MANUAL_USER_ENTRY",
+      "status": "COMPLETE",
+      "startedAt": "2026-08-18T11:15:00Z",
+      "completedAt": "2026-08-18T11:25:00Z"
+    }
+  ],
+  "products": [
+    {
+      "id": "product-demo-mirror-left",
+      "workspaceId": "ws-demo-personal",
+      "canonicalName": "Espejo izquierdo asociado a NK150 (DEMO)",
+      "brand": null,
+      "model": null,
+      "productKind": "PART",
+      "variantAttributes": {
+        "side": "LEFT",
+        "fitmentLabel": "NK150_UNVERIFIED",
+        "fixture": "true"
+      },
+      "status": "CANDIDATE"
+    }
+  ],
+  "productAliases": [
+    {
+      "id": "alias-demo-001",
+      "workspaceId": "ws-demo-personal",
+      "productId": "product-demo-mirror-left",
+      "sourceId": "source-ml-cl",
+      "rawName": "Espejo izquierdo NK150 usado DEMO",
+      "normalizedName": "espejo izquierdo nk150",
+      "confidence": 0.72
+    },
+    {
+      "id": "alias-demo-002",
+      "workspaceId": "ws-demo-personal",
+      "productId": "product-demo-mirror-left",
+      "sourceId": "source-fb-cl",
+      "rawName": "Retrovisor izquierdo para NK150 DEMO",
+      "normalizedName": "espejo izquierdo nk150",
+      "confidence": 0.68
+    }
+  ],
+  "listings": [
+    {
+      "id": "listing-ml-001",
+      "workspaceId": "ws-demo-personal",
+      "marketplaceId": "marketplace-ml-cl",
+      "externalListingId": "DEMO-ML-001",
+      "canonicalUrl": "https://example.invalid/mercado-libre/DEMO-ML-001",
+      "rawTitle": "Espejo izquierdo NK150 usado DEMO",
+      "productId": "product-demo-mirror-left",
+      "condition": "USED",
+      "listingType": "FIXED_PRICE",
+      "firstSeenAt": "2026-08-10T14:00:00Z",
+      "lastSeenAt": "2026-08-18T11:05:00Z",
+      "status": "ACTIVE"
+    },
+    {
+      "id": "listing-fb-001",
+      "workspaceId": "ws-demo-personal",
+      "marketplaceId": "marketplace-fb-cl",
+      "externalListingId": "DEMO-FB-001",
+      "canonicalUrl": "https://example.invalid/facebook/DEMO-FB-001",
+      "rawTitle": "Retrovisor izquierdo para NK150 DEMO",
+      "productId": "product-demo-mirror-left",
+      "condition": "USED",
+      "listingType": "FIXED_PRICE",
+      "firstSeenAt": "2026-08-12T15:00:00Z",
+      "lastSeenAt": "2026-08-18T11:20:00Z",
+      "status": "ACTIVE"
+    },
+    {
+      "id": "listing-fb-002",
+      "workspaceId": "ws-demo-personal",
+      "marketplaceId": "marketplace-fb-cl",
+      "externalListingId": "DEMO-FB-002",
+      "canonicalUrl": "https://example.invalid/facebook/DEMO-FB-002",
+      "rawTitle": "Espejo moto lado izquierdo NK150 DEMO",
+      "productId": "product-demo-mirror-left",
+      "condition": "USED",
+      "listingType": "FIXED_PRICE",
+      "firstSeenAt": "2026-08-13T16:00:00Z",
+      "lastSeenAt": "2026-08-18T11:21:00Z",
+      "status": "ACTIVE"
+    },
+    {
+      "id": "listing-ml-002",
+      "workspaceId": "ws-demo-personal",
+      "marketplaceId": "marketplace-ml-cl",
+      "externalListingId": "DEMO-ML-002",
+      "canonicalUrl": "https://example.invalid/mercado-libre/DEMO-ML-002",
+      "rawTitle": "Espejo vendido NK150 DEMO",
+      "productId": "product-demo-mirror-left",
+      "condition": "USED",
+      "listingType": "FIXED_PRICE",
+      "firstSeenAt": "2026-08-14T13:00:00Z",
+      "lastSeenAt": "2026-08-18T11:06:00Z",
+      "status": "ACTIVE"
+    },
+    {
+      "id": "listing-ml-003",
+      "workspaceId": "ws-demo-personal",
+      "marketplaceId": "marketplace-ml-cl",
+      "externalListingId": "DEMO-ML-003",
+      "canonicalUrl": "https://example.invalid/mercado-libre/DEMO-ML-003",
+      "rawTitle": "Espejo nuevo NK150 DEMO",
+      "productId": "product-demo-mirror-left",
+      "condition": "NEW",
+      "listingType": "FIXED_PRICE",
+      "firstSeenAt": "2026-08-15T13:00:00Z",
+      "lastSeenAt": "2026-08-18T11:07:00Z",
+      "status": "ACTIVE"
+    },
+    {
+      "id": "listing-fb-003",
+      "workspaceId": "ws-demo-personal",
+      "marketplaceId": "marketplace-fb-cl",
+      "externalListingId": "DEMO-FB-003",
+      "canonicalUrl": "https://example.invalid/facebook/DEMO-FB-003",
+      "rawTitle": "Espejo NK150 condición sin confirmar DEMO",
+      "productId": "product-demo-mirror-left",
+      "condition": "UNKNOWN",
+      "listingType": "FIXED_PRICE",
+      "firstSeenAt": "2026-08-16T13:00:00Z",
+      "lastSeenAt": "2026-08-18T11:22:00Z",
+      "status": "ACTIVE"
+    }
+  ],
+  "listingSnapshots": [
+    {
+      "id": "snapshot-ml-001-old",
+      "workspaceId": "ws-demo-personal",
+      "listingId": "listing-ml-001",
+      "captureRunId": "capture-demo-001",
+      "observedAt": "2026-08-10T14:00:00Z",
+      "priceType": "ASKING",
+      "price": { "amount": "46000", "currency": "CLP" },
+      "contentHash": "demo-hash-ml-001-old"
+    },
+    {
+      "id": "snapshot-ml-001-current",
+      "workspaceId": "ws-demo-personal",
+      "listingId": "listing-ml-001",
+      "captureRunId": "capture-demo-001",
+      "observedAt": "2026-08-18T11:05:00Z",
+      "priceType": "ASKING",
+      "price": { "amount": "45000", "currency": "CLP" },
+      "contentHash": "demo-hash-ml-001-current"
+    },
+    {
+      "id": "snapshot-fb-001",
+      "workspaceId": "ws-demo-personal",
+      "listingId": "listing-fb-001",
+      "captureRunId": "capture-demo-002",
+      "observedAt": "2026-08-18T11:20:00Z",
+      "priceType": "ASKING",
+      "price": { "amount": "50000", "currency": "CLP" },
+      "contentHash": "demo-hash-fb-001"
+    },
+    {
+      "id": "snapshot-fb-002",
+      "workspaceId": "ws-demo-personal",
+      "listingId": "listing-fb-002",
+      "captureRunId": "capture-demo-002",
+      "observedAt": "2026-08-18T11:21:00Z",
+      "priceType": "ASKING",
+      "price": { "amount": "55000", "currency": "CLP" },
+      "contentHash": "demo-hash-fb-002"
+    },
+    {
+      "id": "snapshot-ml-002-sold",
+      "workspaceId": "ws-demo-personal",
+      "listingId": "listing-ml-002",
+      "captureRunId": "capture-demo-001",
+      "observedAt": "2026-08-18T11:06:00Z",
+      "priceType": "SOLD",
+      "price": { "amount": "48000", "currency": "CLP" },
+      "contentHash": "demo-hash-ml-002-sold"
+    },
+    {
+      "id": "snapshot-ml-003-new",
+      "workspaceId": "ws-demo-personal",
+      "listingId": "listing-ml-003",
+      "captureRunId": "capture-demo-001",
+      "observedAt": "2026-08-18T11:07:00Z",
+      "priceType": "ASKING",
+      "price": { "amount": "62000", "currency": "CLP" },
+      "contentHash": "demo-hash-ml-003-new"
+    },
+    {
+      "id": "snapshot-fb-003-unknown",
+      "workspaceId": "ws-demo-personal",
+      "listingId": "listing-fb-003",
+      "captureRunId": "capture-demo-002",
+      "observedAt": "2026-08-18T11:22:00Z",
+      "priceType": "ASKING",
+      "price": { "amount": "47000", "currency": "CLP" },
+      "contentHash": "demo-hash-fb-003-unknown"
+    }
+  ],
+  "priceObservations": [
+    {
+      "id": "price-ml-001-old",
+      "workspaceId": "ws-demo-personal",
+      "listingId": "listing-ml-001",
+      "snapshotId": "snapshot-ml-001-old",
+      "sourceId": "source-ml-cl",
+      "observedAt": "2026-08-10T14:00:00Z",
+      "priceType": "ASKING",
+      "condition": "USED",
+      "price": { "amount": "46000", "currency": "CLP" },
+      "qualityStatus": "ELIGIBLE",
+      "exclusionReason": null
+    },
+    {
+      "id": "price-ml-001-current",
+      "workspaceId": "ws-demo-personal",
+      "listingId": "listing-ml-001",
+      "snapshotId": "snapshot-ml-001-current",
+      "sourceId": "source-ml-cl",
+      "observedAt": "2026-08-18T11:05:00Z",
+      "priceType": "ASKING",
+      "condition": "USED",
+      "price": { "amount": "45000", "currency": "CLP" },
+      "qualityStatus": "ELIGIBLE",
+      "exclusionReason": null
+    },
+    {
+      "id": "price-fb-001",
+      "workspaceId": "ws-demo-personal",
+      "listingId": "listing-fb-001",
+      "snapshotId": "snapshot-fb-001",
+      "sourceId": "source-fb-cl",
+      "observedAt": "2026-08-18T11:20:00Z",
+      "priceType": "ASKING",
+      "condition": "USED",
+      "price": { "amount": "50000", "currency": "CLP" },
+      "qualityStatus": "ELIGIBLE",
+      "exclusionReason": null
+    },
+    {
+      "id": "price-fb-002",
+      "workspaceId": "ws-demo-personal",
+      "listingId": "listing-fb-002",
+      "snapshotId": "snapshot-fb-002",
+      "sourceId": "source-fb-cl",
+      "observedAt": "2026-08-18T11:21:00Z",
+      "priceType": "ASKING",
+      "condition": "USED",
+      "price": { "amount": "55000", "currency": "CLP" },
+      "qualityStatus": "ELIGIBLE",
+      "exclusionReason": null
+    },
+    {
+      "id": "price-ml-002-sold",
+      "workspaceId": "ws-demo-personal",
+      "listingId": "listing-ml-002",
+      "snapshotId": "snapshot-ml-002-sold",
+      "sourceId": "source-ml-cl",
+      "observedAt": "2026-08-18T11:06:00Z",
+      "priceType": "SOLD",
+      "condition": "USED",
+      "price": { "amount": "48000", "currency": "CLP" },
+      "qualityStatus": "ELIGIBLE",
+      "exclusionReason": null
+    },
+    {
+      "id": "price-ml-003-new",
+      "workspaceId": "ws-demo-personal",
+      "listingId": "listing-ml-003",
+      "snapshotId": "snapshot-ml-003-new",
+      "sourceId": "source-ml-cl",
+      "observedAt": "2026-08-18T11:07:00Z",
+      "priceType": "ASKING",
+      "condition": "NEW",
+      "price": { "amount": "62000", "currency": "CLP" },
+      "qualityStatus": "ELIGIBLE",
+      "exclusionReason": null
+    },
+    {
+      "id": "price-fb-003-unknown",
+      "workspaceId": "ws-demo-personal",
+      "listingId": "listing-fb-003",
+      "snapshotId": "snapshot-fb-003-unknown",
+      "sourceId": "source-fb-cl",
+      "observedAt": "2026-08-18T11:22:00Z",
+      "priceType": "ASKING",
+      "condition": "UNKNOWN",
+      "price": { "amount": "47000", "currency": "CLP" },
+      "qualityStatus": "EXCLUDED",
+      "exclusionReason": "CONDITION_UNKNOWN"
+    }
+  ],
+  "opportunities": [
+    {
+      "id": "opportunity-demo-001",
+      "workspaceId": "ws-demo-personal",
+      "productId": "product-demo-mirror-left",
+      "marketId": "market-cl",
+      "opportunityType": "RESALE",
+      "status": "RESEARCHING",
+      "hypothesis": "DEMO: adquirir un artículo usado por debajo del valor realizable estimado y validarlo antes de comprometer capital.",
+      "scoreStatus": "UNCALIBRATED"
+    }
+  ]
+}

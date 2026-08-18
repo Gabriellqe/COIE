@@ -1,8 +1,8 @@
 ---
 type: architecture
 status: proposed
-version: 0.1
-updated: 2026-08-12
+version: 0.2
+updated: 2026-08-18
 ---
 
 # Modelo de datos
@@ -22,11 +22,16 @@ Definir un modelo canónico que preserve historia y procedencia, permita compara
 - Observaciones: append-only; una corrección agrega una nueva versión o marca invalidez con motivo.
 - Derivados: conservan `calculation_version`, inputs y timestamp.
 - Borrado lógico cuando la auditoría o una relación histórica lo exijan.
+- `workspace_id` delimita propiedad y acceso de entidades comerciales; no se acepta desde el cliente sin comprobar membresía.
 
 ## 3. Vista conceptual
 
 ```mermaid
 erDiagram
+    USER_PROFILE ||--o{ WORKSPACE_MEMBER : integra
+    WORKSPACE ||--o{ WORKSPACE_MEMBER : autoriza
+    WORKSPACE ||--o{ PRODUCT : contiene
+    WORKSPACE ||--o{ OPPORTUNITY : evalua
     MARKET ||--o{ NICHE : contiene
     NICHE ||--o{ PRODUCT_ECOSYSTEM : agrupa
     PRODUCT_ECOSYSTEM ||--o{ BASE_PRODUCT : incluye
@@ -46,6 +51,24 @@ erDiagram
     EXPERIMENT ||--o{ INVENTORY_LOT : adquiere
     INVENTORY_LOT ||--o{ SALE : produce
 ```
+
+### 3.1 Identidad y aislamiento
+
+`Market`, `DataSource` y `Marketplace` forman catálogos de referencia compartidos. Productos, aliases, capturas, listings, observaciones, proveedores, oportunidades, scores, experimentos y auditoría pertenecen a un workspace.
+
+#### UserProfile
+
+Perfil de dominio vinculado al identificador del proveedor de autenticación. Campos: `id`, `auth_user_id`, `display_name`, `created_at`, `updated_at`. No almacena contraseñas.
+
+#### Workspace
+
+Límite de propiedad y colaboración: `id`, `name`, `workspace_type` (`PERSONAL`, `SHARED`), `created_by`, `created_at`, `updated_at`.
+
+#### WorkspaceMember
+
+Membresía explícita: `workspace_id`, `user_profile_id`, `role` (`OWNER`, `MEMBER`), `created_at`. La combinación `workspace_id + user_profile_id` es única.
+
+Al integrar Supabase, Row Level Security verifica la membresía para cada lectura y escritura. Una referencia a otra entidad debe pertenecer al mismo workspace, salvo catálogos compartidos declarados.
 
 ## 4. Entidades de taxonomía
 
@@ -89,6 +112,7 @@ Identidad canónica de un SKU o producto comercializable.
 | Campo | Tipo | Regla |
 |---|---|---|
 | `id` | ID | requerido |
+| `workspace_id` | ID | requerido; propietario lógico |
 | `canonical_name` | texto | requerido |
 | `brand` | texto nullable | no inventar si falta |
 | `model` | texto nullable | normalizado |
@@ -133,6 +157,7 @@ Campos mínimos:
 
 ```text
 id
+workspace_id
 marketplace_id
 external_listing_id
 canonical_url
@@ -149,13 +174,13 @@ identity_confidence
 
 ### ListingSnapshot
 
-Captura permitida de atributos variables: `id`, `listing_id`, `observed_at`, `price`, `currency`, `shipping_price`, `stock_claim`, `units_sold_claim`, `seller_reputation`, `content_hash`, `raw_ref`, `capture_run_id`.
+Captura permitida de atributos variables: `id`, `workspace_id`, `listing_id`, `observed_at`, `price`, `currency`, `shipping_price`, `stock_claim`, `units_sold_claim`, `seller_reputation`, `content_hash`, `raw_ref`, `capture_run_id` nullable. La referencia puede ser nula sólo para datos históricos importados cuya ejecución no esté disponible; nuevas cargas manuales crean `CaptureRun`.
 
 ### PriceObservation
 
 Observación canónica de precio usada en análisis.
 
-Campos: `id`, `subject_type`, `subject_id`, `price_type`, `amount`, `currency`, `condition`, `quantity`, `observed_at`, `source_id`, `snapshot_id`, `conversion_ref`, `quality_status`.
+Campos: `id`, `workspace_id`, `subject_type`, `subject_id`, `price_type`, `amount`, `currency`, `condition`, `quantity`, `observed_at`, `source_id`, `snapshot_id`, `conversion_ref`, `quality_status`.
 
 `price_type`: `ASKING`, `SOLD`, `SUPPLIER`, `REFERENCE`, `INTERNAL_SALE`. Los precios publicados y vendidos nunca se mezclan sin diferenciación.
 
@@ -189,7 +214,7 @@ Los nombres conceptuales `DemandSignal`, `SupplySignal`, `CompetitionSignal` y `
 
 ### Supplier
 
-Campos: `id`, `name`, `market_id`, `website`, `verification_status`, `reliability_score`, `risk_notes`, `created_at`, `updated_at`.
+Campos: `id`, `workspace_id`, `name`, `market_id`, `website`, `verification_status`, `reliability_score`, `risk_notes`, `created_at`, `updated_at`.
 
 ### SupplierOffer
 
@@ -205,8 +230,10 @@ opportunity_id
 calculation_version
 currency
 quantity
-supplier_price
+acquisition_cost
+supplier_price?
 inbound_shipping
+repair_cost
 taxes
 customs
 landed_cost
@@ -217,8 +244,10 @@ outbound_shipping
 packaging_cost
 other_variable_cost
 gross_profit
+contribution_amount
 contribution_margin
 roi
+capital_invested
 expected_days_to_sell
 capital_efficiency
 assumptions
@@ -229,7 +258,7 @@ calculated_at
 Fórmulas base:
 
 ```text
-landed_cost = supplier_price + inbound_shipping + taxes + customs
+landed_cost = acquisition_cost + inbound_shipping + repair_cost + taxes + customs
 contribution = sale_price - landed_cost - marketplace_fee
                - payment_fee - outbound_shipping - packaging_cost
 contribution_margin = contribution / sale_price
@@ -246,6 +275,7 @@ Las unidades de tiempo de `capital_efficiency` deben declararse; la comparación
 | Campo | Tipo | Regla |
 |---|---|---|
 | `id` | ID | requerido |
+| `workspace_id` | ID | requerido; propietario lógico |
 | `product_id` | ID | requerido en MVP |
 | `market_id` | ID | requerido |
 | `opportunity_type` | enum | según [[OPPORTUNITY_TYPES]] |
@@ -313,7 +343,7 @@ Agregado derivado y versionado para análisis, no sustituto de `Sale`.
 
 ### CaptureRun
 
-Ejecución de adquisición: fuente, versión de conector, parámetros no secretos, conteos, estado, errores, inicio y fin.
+Ejecución de adquisición: `id`, `workspace_id`, fuente, método (`MANUAL_USER_ENTRY` o conector autorizado), versión, parámetros no secretos, conteos, estado, errores, inicio y fin.
 
 ### DataQualityIssue
 
@@ -332,12 +362,19 @@ Cambios manuales relevantes: actor, acción, entidad, antes/después permitido, 
 - Una compatibilidad en conflicto reduce confianza y no se presenta como verificada.
 - Cada conversión monetaria conserva tasa, moneda origen/destino, fuente y fecha.
 - Una fusión de productos no elimina aliases, listings ni auditoría.
+- Toda referencia entre entidades aisladas conserva el mismo `workspace_id`.
+- Un usuario sin membresía no puede consultar ni mutar datos del workspace.
+- `Market`, `DataSource` y `Marketplace` son catálogos compartidos; sus observaciones y selecciones no lo son.
 
 ## 13. Datos mínimos para el primer incremento
 
 Implementar primero:
 
 ```text
+UserProfile
+Workspace
+WorkspaceMember
+Market
 Product
 ProductAlias
 DataSource
@@ -345,6 +382,7 @@ Marketplace
 MarketplaceListing
 ListingSnapshot
 PriceObservation
+CaptureRun
 Opportunity
 EconomicsRun
 ScoreRun

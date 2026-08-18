@@ -1,7 +1,7 @@
 ---
 type: roadmap
 status: active
-updated: 2026-08-12
+updated: 2026-08-18
 ---
 
 # Roadmap
@@ -30,9 +30,9 @@ Phase 7  Autonomous Discovery
 
 ## Phase 0 — Foundation
 
-**Resultado:** repositorio documentado, decisiones básicas, arquitectura lógica, backlog, contratos y esqueleto técnico reproducible.
+**Resultado:** repositorio documentado, decisiones básicas, arquitectura lógica, backlog, contratos, aislamiento multiusuario modelado y esqueleto técnico reproducible.
 
-**Entregables:** documentos objetivo, Sprint 0, ADR, mercado/fuente inicial, stack, fixtures, validaciones y benchmark.
+**Entregables:** documentos objetivo, Sprint 0, ADR, mercado/fuente inicial, stack, contratos de workspace, fixtures, validaciones y benchmark.
 
 **Puerta de salida:**
 
@@ -41,6 +41,8 @@ Phase 7  Autonomous Discovery
 - fixture canónico válido;
 - historias P0 refinadas y primer incremento seleccionado;
 - no existen contradicciones críticas entre PRD, datos y scoring.
+
+El caso de referencia inicial es Chile/CLP y un repuesto usado asociado a NK150. Es una validación vertical, no una restricción permanente del producto.
 
 ## Phase 1 — Market Price Intelligence
 
