@@ -107,12 +107,15 @@ MVP-A3 Experimentation Lite
 - estadísticas de cohorte `USED/ASKING/CLP`;
 - cohorte explicada por último snapshot, fecha de corte y exclusiones;
 - `MarketPriceEstimate` DEMO calculado en lectura con suficiencia, IQR, inputs y versión;
+- carga manual DEMO validada, idempotente y append-only;
+- almacén local DEMO con recibos de captura y `MarketPriceEstimate` histórico;
 - procedencia, histórico, workspace y score no calibrado.
 
 ### Documentado, no implementado
 
 - sujetos `LISTING`, `NICHE`, `SUPPLY_ROUTE`, `PRODUCT_SET` nativos;
-- persistencia histórica de importaciones manuales y `MarketPriceEstimate`;
+- persistencia Supabase/PostgreSQL y operación multiproceso;
+- correcciones/invalidation auditables sobre observaciones ya persistidas;
 - pricing `QUICK/TARGET/PREMIUM`;
 - `MaximumBuyPrice` y liquidez calculados;
 - reposición, grafo de productos, estacionalidad y learning;

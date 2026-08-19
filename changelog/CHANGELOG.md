@@ -16,6 +16,9 @@ Los cambios materiales del proyecto se registran por fecha. El documento sigue u
 - cohorte comparable A1 con exclusiones explícitas, último snapshot antes del corte y procedencia limitada a inputs usados;
 - `MarketPriceEstimate v0.1.0` DEMO con suficiencia, estimación nullable, cuartiles/IQR, cobertura descriptiva e inputs versionados;
 - pruebas de cohortes vacías/insuficientes, exclusiones, moneda incompatible y no reactivación de precios antiguos.
+- [[ADR-009]] y almacén JSON local DEMO versionado, validado y atómico;
+- formulario `/market-evidence/new`, recibos `CaptureRun`, idempotencia y persistencia append-only;
+- materialización histórica de `MarketPriceEstimate` y lectura dinámica desde el mismo store.
 
 ### Changed
 
@@ -36,7 +39,7 @@ Los cambios materiales del proyecto se registran por fecha. El documento sigue u
 - Quick/Target/Premium, Maximum Buy, liquidez y economía calculados;
 - ProductRelationship, Seasonality, Replenishment, Learning y agentes autónomos;
 - Supabase Auth/RLS y conectores reales.
-- persistencia append-only de carga manual y del histórico de `MarketPriceEstimate`.
+- persistencia Supabase/PostgreSQL, Auth/RLS y operación multiproceso.
 
 ### Open
 

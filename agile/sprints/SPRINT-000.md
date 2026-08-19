@@ -40,8 +40,9 @@ Preparar una base documental y técnica coherente para comenzar MVP-A Resale Dec
 
 - [x] MI-002 — Construir cohorte comparable explicada.
 - [x] MI-003 — Calcular estadística robusta y suficiencia.
-- [ ] MI-006 — Persistir históricamente `MarketPriceEstimate`. `IN_PROGRESS`
-- [ ] DA-002 / MI-001 — Importación manual append-only e idempotente.
+- [x] DA-001 — Contrato `CaptureRun` y recibo de importación versionado.
+- [x] DA-002 / MI-001 — Importación manual persistente, append-only e idempotente.
+- [x] MI-006 — Persistir históricamente `MarketPriceEstimate` DEMO.
 
 ## Entregables
 
@@ -93,14 +94,16 @@ Se investigaron las fuentes candidatas de Chile: Mercado Libre ofrece API oficia
 
 El 2026-08-19 se revisaron tres síntesis históricas del origen de COIE. La reconciliación confirmó el núcleo `DISCOVER → EVALUATE → TEST → MEASURE → SCALE/REJECT/MODIFY` y detectó brechas en Opportunity, Commercial Pricing, Maximum Buy, Seasonality y secuenciación. FND-013 integra [[ADR-006]], [[ADR-007]] y [[ADR-008]] sin modificar el maestro histórico.
 
-La validación `pnpm check` del 2026-08-19 pasó: formato, ESLint, TypeScript, 22 pruebas, 57 archivos Markdown/11 IDs y build Next.js. El shell usa ahora `medianAskingPrice`, muestra la ausencia sin cero y mantiene Quick/Target/Premium, Maximum Buy y liquidez como no calculados.
+La validación `pnpm check` del 2026-08-19 pasó: formato, ESLint, TypeScript, 33 pruebas, 58 archivos Markdown/12 IDs y build Next.js. El shell usa ahora `medianAskingPrice`, muestra la ausencia sin cero y mantiene Quick/Target/Premium, Maximum Buy y liquidez como no calculados.
 
-MVP-A1 comenzó sin cerrar FND-007. La cohorte `comparable-cohort-v0.1.0` elige el último snapshot anterior al corte antes de aplicar condición, tipo de precio, moneda y calidad, evitando reactivar evidencia antigua. `MarketPriceEstimate v0.1.0` expone suficiencia, estimación central nullable, cuartiles/IQR, inputs, cobertura descriptiva y exclusiones; permanece `DEMO` y no constituye Market Value, precio realizable ni recomendación. MI-002 y MI-003 quedan completados; MI-006 sigue en progreso hasta persistir su histórico.
+MVP-A1 comenzó sin cerrar FND-007. La cohorte `comparable-cohort-v0.1.0` elige el último snapshot anterior al corte antes de aplicar condición, tipo de precio, moneda y calidad, evitando reactivar evidencia antigua. `MarketPriceEstimate v0.1.0` expone suficiencia, estimación central nullable, cuartiles/IQR, inputs, cobertura descriptiva y exclusiones; permanece `DEMO` y no constituye Market Value, precio realizable ni recomendación.
+
+[[ADR-009]] añade el flujo `/market-evidence/new`: valida una carga exclusivamente DEMO, deriva workspace/fuente/método en servidor, registra `CaptureRun`, detecta reintentos/duplicados/conflictos, agrega snapshots y observaciones sin sobrescribir y persiste la estimación resultante. El almacén JSON local se valida completo, serializa escrituras y sobrevive reinicios; DA-001, DA-002, MI-001 y MI-006 quedan completados para el perfil local DEMO.
 
 ## Problems / Risks
 
 - Mercado Libre Chile y Facebook Marketplace son fuentes candidatas, pero falta comprobar un mecanismo autorizado, términos, campos y retención.
-- No existe todavía proyecto Supabase; Foundation utiliza un adaptador DEMO sin credenciales.
+- El proyecto Supabase existe y está saludable, pero no tiene schema/Auth/RLS integrados; MVP-A1 continúa con el adaptador local DEMO sin credenciales.
 - Falta un repuesto/variante NK150 real para ejecutar el benchmark B1.
 - El benchmark B0 está `PARTIAL`; faltan moneda alternativa, gates y economía desconocida antes de aprobar su matriz completa.
 - Los pesos de scoring son una hipótesis sin calibración real.
@@ -117,14 +120,16 @@ MVP-A1 comenzó sin cerrar FND-007. La cohorte `comparable-cohort-v0.1.0` elige 
 - [[ADR-006]] — Opportunity como agregado central y perfil MVP-A Resale.
 - [[ADR-007]] — Evidencia de mercado, pricing y máximo de compra separados.
 - [[ADR-008]] — Platform Access diferido del primer ciclo comercial.
+- [[ADR-009]] — Persistencia local DEMO append-only para MVP-A1.
 
 ## Next Actions
 
 1. Comprobar una fuente real permitida para cerrar FND-007.
-2. Refinar DA-002, MI-001 y MI-006 para dejar MVP-A1 en Definition of Ready.
-3. Persistir importación manual y ejecuciones `MarketPriceEstimate` sin reinterpretar el schema Foundation `0.1.0`.
+2. Completar la matriz B0 con gates y economía desconocida.
+3. Diseñar DA-004 para correcciones/invalidation append-only antes de importar archivos externos.
 4. Seleccionar el caso real y ejecutar B1 cuando exista evidencia permitida.
-5. Activar Platform Access antes de datos reales multiusuario, no antes del primer ciclo DEMO/manual.
+5. Preparar MVP-A2: PricingRecommendation, Maximum Buy y Economics Core manual.
+6. Activar Platform Access antes de datos reales multiusuario, no antes del primer ciclo DEMO/manual.
 
 ## Review
 
