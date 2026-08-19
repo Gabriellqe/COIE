@@ -1,129 +1,160 @@
 ---
 type: project-context
 status: active
-updated: 2026-08-18
+updated: 2026-08-19
 ---
 
 # Contexto operativo
 
 ## Identidad
 
-**Proyecto:** Commerce Opportunity Intelligence Engine (`COIE`).  
-**Fase:** Discovery / Product Definition; Sprint 0 iniciado.  
-**Idioma del proyecto:** español; identificadores de dominio y código en inglés consistente.  
+**Proyecto:** Commerce Opportunity Intelligence Engine (`COIE`).
+
+**Fase:** Foundation / reconciliación conceptual; Sprint 0 activo.
+
+**Perfil en desarrollo:** **MVP-A Resale Decision**.
+
+**Idioma:** documentación funcional en español; identificadores de código/dominio en inglés.
+
 **Fuente histórica:** [[Commerce_Opportunity_Intelligence_Engine_MASTER]].
+
+## Modelo rector
+
+`Opportunity` es el agregado central:
+
+```text
+DISCOVER → EVALUATE → TEST → MEASURE → SCALE / REJECT / MODIFY
+```
+
+COIE debe responder:
+
+1. ¿Qué vender?
+2. ¿Vale la pena?
+3. ¿Dónde comprarlo?
+4. ¿Cómo venderlo?
+5. ¿Debería seguir haciéndolo?
+
+Las estrategias, los sujetos y las capacidades son dimensiones distintas. Ver [[OPPORTUNITY_MODEL]] y [[ADR-006]].
 
 ## Decisiones vigentes del primer incremento
 
-- Mercado: Chile (`CL`), moneda `CLP`, presentación en `America/Santiago` y persistencia temporal UTC.
-- Caso inicial: `RESALE` de un repuesto usado asociado a NK150; fixtures marcados `DEMO`.
-- Adquisición inicial: carga manual trazable; Mercado Libre Chile y Facebook Marketplace son fuentes candidatas pendientes de revisión de acceso.
-- Stack: Next.js, React, TypeScript y PostgreSQL/Supabase; ejecución Foundation mediante adaptador DEMO sin red.
-- Interfaz: dashboard A para operación y vista B para detalle analítico.
-- Usuarios: autenticación futura con Supabase Auth y aislamiento por `workspace_id`/RLS.
+- Mercado: Chile (`CL`), moneda `CLP`, presentación `America/Santiago`, persistencia UTC.
+- Caso inicial: `RESALE` de un repuesto usado asociado a NK150; fixtures `DEMO`.
+- Adquisición: carga manual trazable; fuentes reales pendientes de autorización.
+- Stack: Next.js, React, TypeScript y PostgreSQL/Supabase como objetivo; adaptador DEMO sin red.
+- Interfaz: shell A+B, no dashboard productivo completo.
+- Perfil canónico actual: `opportunityType + productId`; migración futura versionada a `strategy + subject`.
+- Workspaces: `workspace_id` se conserva; Supabase Auth/RLS se difiere según [[ADR-008]].
 
 ## Objetivo inmediato
 
-Completar [[SPRINT-000]] y comenzar un incremento vertical de Market Price Intelligence que acepte un producto, incorpore referencias, calcule estadísticas y preserve procedencia/histórico.
+Cerrar Sprint 0 resolviendo FND-007 y preparar MVP-A1:
 
-## Orden de autoridad documental
+```text
+Producto/publicación RESALE
+→ cohorte comparable
+→ MarketPriceEstimate trazable
+```
 
-Cuando exista conflicto:
+Después:
+
+```text
+MVP-A2 Resale Decision
+→ PricingRecommendation
+→ MaximumBuyPrice
+→ Economics Core
+→ riesgo/confianza/gates
+
+MVP-A3 Experimentation Lite
+→ predicción
+→ prueba
+→ resultado
+→ decisión
+```
+
+## Orden de autoridad
 
 1. ADR aceptado más reciente;
-2. [[PRD]] para alcance y requisitos;
-3. [[DATA_MODEL]], [[SYSTEM_ARCHITECTURE]] y [[SCORING_MODEL]] para contratos técnicos;
-4. [[PRODUCT_VISION]] para intención estratégica;
-5. [[BACKLOG]] y sprint actual para ejecución;
-6. documento maestro como contexto histórico.
+2. [[PRD]];
+3. [[DATA_MODEL]], [[SYSTEM_ARCHITECTURE]], [[SCORING_MODEL]] y especificaciones de producto;
+4. [[PRODUCT_VISION]];
+5. [[BACKLOG]] y sprint activo;
+6. documento maestro histórico.
 
-El conflicto debe señalarse y resolverse; no se elige silenciosamente la interpretación conveniente.
+## Reglas de dominio
 
-## Reglas de dominio que no deben romperse
-
-- El MVP implementa `RESALE` y `REPLENISHMENT`; otros tipos se modelan, no se construyen completos.
-- Todo dato externo lleva fuente y fecha.
-- Las observaciones históricas no se sobrescriben.
+- Todo dato externo conserva fuente, fecha y método.
+- Las observaciones son históricas y no se sobrescriben.
 - `unknown` no equivale a cero.
-- Precio pedido y precio vendido son categorías distintas.
-- Monedas no se agregan sin conversión trazable.
-- Condiciones/variantes incompatibles no se mezclan.
-- `OpportunityScore`, `RiskScore`, confianza y cobertura se muestran separados.
-- Los cálculos y scores son versionados y reproducibles.
-- Ninguna recomendación compra, publica o escala inventario automáticamente.
-- Los criterios de un experimento se fijan antes de iniciarlo.
+- `ASKING` y `SOLD` permanecen separados.
+- No mezclar monedas, condiciones o variantes sin ajuste trazable.
+- Una mediana `ASKING` no es automáticamente `Market Value` ni precio realizable.
+- `MarketPriceEstimate`, `PricingRecommendation` y `MaximumBuyPrice` son contratos distintos.
+- `Quick Sale` requiere ventas/velocidad o un proxy explícito; si falta, permanece desconocido.
+- Score, riesgo, confianza y cobertura se muestran separados y versionados.
+- Resultados DEMO o no calibrados se etiquetan visiblemente.
+- Ninguna recomendación compra, publica, contacta, negocia o escala capital automáticamente.
+- Un experimento congela predicciones y criterios antes de ejecutarse.
+- No se implementa scraping ni conectores sin método permitido.
 
-## Flujo para nueva información
+## Perfil Foundation frente al modelo objetivo
 
-Clasificar primero como una de estas categorías:
+### Implementado
+
+- dataset DEMO `0.1.0`;
+- estrategia efectiva `RESALE`;
+- sujeto efectivo `PRODUCT` con publicaciones;
+- estadísticas de cohorte `USED/ASKING/CLP`;
+- cohorte explicada por último snapshot, fecha de corte y exclusiones;
+- `MarketPriceEstimate` DEMO calculado en lectura con suficiencia, IQR, inputs y versión;
+- procedencia, histórico, workspace y score no calibrado.
+
+### Documentado, no implementado
+
+- sujetos `LISTING`, `NICHE`, `SUPPLY_ROUTE`, `PRODUCT_SET` nativos;
+- persistencia histórica de importaciones manuales y `MarketPriceEstimate`;
+- pricing `QUICK/TARGET/PREMIUM`;
+- `MaximumBuyPrice` y liquidez calculados;
+- reposición, grafo de productos, estacionalidad y learning;
+- Supabase Auth/RLS y conectores reales.
+
+## Clasificación de nueva información
 
 | Categoría | Destino |
 |---|---|
-| Idea | `ideas/` con estado `Inbox` |
-| Research | `docs/research/` con fuentes y fecha |
-| Decision | `docs/decisions/ADR-NNN-*.md` |
+| Idea | `ideas/` |
+| Research | `docs/research/` |
+| Decision | `docs/decisions/ADR-NNN.md` |
 | Epic | [[EPICS]] |
-| Feature/User Story | [[USER_STORIES]] y [[BACKLOG]] |
+| User Story | [[USER_STORIES]] y [[BACKLOG]] |
 | Experiment | `experiments/` |
-| Architecture | `docs/architecture/` y ADR si decide un trade-off |
+| Architecture | `docs/architecture/` + ADR cuando corresponda |
 
-No convertir una idea directamente en trabajo P0 sin hipótesis, valor y relación con el MVP.
+## Protocolo de cambios
 
-## Protocolo para cambios
-
-1. Leer README, contexto, sprint actual y documentos afectados.
-2. Revisar estado del repositorio y preservar cambios no relacionados.
-3. Identificar requisito/historia y criterios de aceptación.
-4. Actualizar diseño o ADR si cambia un contrato importante.
+1. Leer contexto, sprint y documentos afectados.
+2. Revisar worktree y preservar cambios no relacionados.
+3. Vincular el trabajo a Foundation, épica o historia.
+4. Registrar decisiones de arquitectura/alcance mediante ADR.
 5. Implementar el incremento mínimo completo.
 6. Probar casos correctos, límites y fallos.
-7. Actualizar fixtures, documentación, backlog y changelog.
-8. Verificar Definition of Done antes de marcar `DONE`.
-
-## Convenciones de documentación
-
-- Markdown compatible con Obsidian.
-- Enlaces internos de Obsidian con doble corchete cuando el nombre de la nota sea único.
-- Frontmatter con `type`, `status`, `created/updated` según corresponda.
-- IDs estables: `EPIC-NN`, `US-NNN`, `ADR-NNN`, `EXP-NNN`, `IDEA-NNN`, `SPRINT-NNN`.
-- Fechas ISO `YYYY-MM-DD`.
-- Hechos, inferencias, hipótesis y decisiones deben distinguirse.
-- Investigación externa incluye URL/fuente, fecha de consulta, mercado y limitaciones.
-
-## Convenciones técnicas provisionales
-
-Durante Foundation y antes de integrar Supabase:
-
-- modelo de dominio independiente de conectores;
-- una aplicación Next.js en la raíz del repositorio;
-- puerto de persistencia con adaptador DEMO reproducible;
-- dinero decimal + moneda;
-- timestamps UTC;
-- IDs internos estables;
-- validación de esquemas en límites de entrada;
-- tests deterministas sin depender de red;
-- secretos fuera del repositorio;
-- fixture pequeño pero representativo para cada contrato.
+7. Actualizar documentación, backlog, sprint y changelog.
+8. Aplicar la Definition of Done de [[USER_STORIES]].
 
 ## Calidad
 
-Aplicar la Definition of Done de [[USER_STORIES]]. En documentación, además:
+- cálculos reproducibles y versionados;
+- fixtures sin secretos y etiquetados DEMO;
+- tests sin red;
+- enlaces Obsidian válidos e IDs únicos;
+- código, pruebas y estado documental coherentes;
+- decisiones pendientes no presentadas como aceptadas.
 
-- enlaces resuelven;
-- no hay IDs duplicados;
-- tablas y Mermaid renderizan;
-- estado y fecha están actualizados;
-- el changelog refleja cambios materiales;
-- las decisiones pendientes no se presentan como aceptadas.
+## Bloqueos conocidos
 
-## Estado conocido y bloqueos de producto
-
-Pendientes de decisión humana/ADR:
-
-- primera fuente con acceso permitido;
-- umbrales de frescura y ejecución completa B0/B1;
+- primera fuente real con mecanismo permitido;
+- ejecución B1 con una pieza/variante real;
+- umbrales de frescura;
+- costos y contribución objetivo para Maximum Buy;
+- evidencia suficiente para Quick Sale y liquidez;
 - límites de capital para experimentos reales.
-
-La estrategia de autenticación está decidida, pero su integración requiere crear el proyecto Supabase. El benchmark B1 requiere una pieza/variante NK150 real y evidencia permitida.
-
-Mientras estén pendientes, se puede avanzar con contratos, fixtures y lógica pura, pero no asumir silenciosamente valores comerciales reales.

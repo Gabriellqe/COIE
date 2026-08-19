@@ -1,7 +1,7 @@
 ---
 type: product
 status: research
-opportunity_type:
+opportunity_strategy:
 niche:
 ecosystem:
 market:
@@ -17,10 +17,23 @@ updated: YYYY-MM-DD
 
 ## Hipótesis de oportunidad
 
-## Comparables y precio
+## Comparables y Market Evidence
 
 | Referencia | Condición | Tipo de precio | Monto/moneda | Fecha |
 |---|---|---|---:|---|
+
+## Pricing comercial
+
+- Quick:
+- Target:
+- Premium:
+- Suficiencia / método:
+
+## Maximum Buy
+
+- Escenario seleccionado:
+- Costos / contribución / reservas:
+- Resultado o gate:
 
 ## Demanda, oferta y competencia
 

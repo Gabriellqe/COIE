@@ -1,128 +1,110 @@
 ---
 type: epic-index
 status: active
-updated: 2026-08-18
+updated: 2026-08-19
 ---
 
 # Épicas
 
 ## Mapa
 
-| ID | Épica | Resultado | Prioridad MVP | Depende de |
+| ID | Épica | Resultado | Horizonte | Depende de |
 |---|---|---|---|---|
-| EPIC-01 | Data Acquisition | evidencia externa canónica y trazable | P0 | Foundation |
-| EPIC-02 | Product Intelligence | identidad y variantes normalizadas | P0 | EPIC-01 |
-| EPIC-03 | Market Intelligence | precio, demanda y competencia | P0 | EPIC-01, EPIC-02 |
-| EPIC-04 | Resale Intelligence | ranking de oportunidades usadas | P0 | EPIC-03, EPIC-08 |
-| EPIC-05 | Replenishment Intelligence | recurrencia y ecosistemas | P1 | EPIC-02, EPIC-03 |
-| EPIC-06 | Niche Discovery | candidatos de nicho priorizados | P2 | EPIC-03, EPIC-05 |
-| EPIC-07 | Sourcing Intelligence | ofertas y landed cost | P0/P1 | EPIC-02 |
-| EPIC-08 | Opportunity Scoring | ranking explicable y versionado | P0 | EPIC-03, EPIC-07 |
-| EPIC-09 | Experimentation | pruebas y resultados medibles | P1 | EPIC-08 |
-| EPIC-10 | Learning | calibración con resultados reales | P2 | EPIC-09 |
-| EPIC-11 | Platform Access | identidad, workspaces y aislamiento de datos | P0 | Foundation |
+| EPIC-01 | Data Acquisition | evidencia externa canónica y permitida | A1 | Foundation |
+| EPIC-02 | Product Intelligence | identidad/variantes normalizadas | A1 | EPIC-01 |
+| EPIC-03 | Market Evidence | cohortes y MarketPriceEstimate | A1 | EPIC-01, EPIC-02 |
+| EPIC-12 | Commercial Pricing | Quick/Target/Premium con suficiencia | A2 | EPIC-03 |
+| EPIC-07 | Economics & Sourcing | Economics Core A2; sourcing completo B | A2/B | EPIC-02 |
+| EPIC-08 | Opportunity Evaluation | score, riesgo, confianza, gates | A2 | EPIC-03, EPIC-07, EPIC-12 |
+| EPIC-04 | Resale Decision | decisión de compra/reventa explicable | A2 | EPIC-08 |
+| EPIC-09 | Experimentation | prueba Lite y resultados medibles | A3 | EPIC-04 |
+| EPIC-05 | Replenishment Intelligence | recurrencia y ecosistemas | C | EPIC-02, EPIC-03, EPIC-07 |
+| EPIC-14 | Product & Catalog Relations | relaciones, compatibilidad y bundles | C/D | EPIC-02 |
+| EPIC-06 | Niche & Catalog Discovery | nichos/catálogo priorizados | D | EPIC-03, EPIC-05, EPIC-14 |
+| EPIC-13 | Seasonality Intelligence | timing y preparación temporal | posterior | histórico suficiente |
+| EPIC-10 | Learning | calibración con resultados reales | posterior | EPIC-09 |
+| EPIC-11 | Platform Access | identidad/workspaces/RLS | soporte posterior | ADR-008 |
 
 ## EPIC-01 — Data Acquisition
 
-**Problema:** la evidencia está distribuida y cambia con el tiempo.
+Incorporar datos mediante carga manual o conectores permitidos, preservando fuente, fecha, método, histórico, idempotencia y errores.
 
-**Objetivo:** incorporar datos permitidos mediante conectores reemplazables, preservando fuente, fecha, histórico y errores.
-
-**Incluye:** contrato de conector, capturas, validación, deduplicación, idempotencia, observabilidad y carga manual estructurada.
-
-**Criterio de salida:** una ejecución reproducible incorpora observaciones de al menos una fuente real autorizada y fixtures de ejemplo sin duplicar ni sobrescribir historia.
+**Salida A1:** carga manual estructurada y al menos una fuente real permitida o gate explícito.
 
 ## EPIC-02 — Product Intelligence
 
-**Problema:** títulos y catálogos distintos describen el mismo producto o variantes incompatibles.
+Resolver identidad, marca, modelo, variante, condición y aliases sin fusionar ambigüedades críticas.
 
-**Objetivo:** crear identidades canónicas con aliases, atributos, condición y confianza de coincidencia.
+**Salida A1:** publicaciones comparables asignadas al producto/variante correcto con confianza y revisión.
 
-**Incluye:** normalización, resolución, revisión de coincidencias ambiguas y fusión auditable.
+## EPIC-03 — Market Evidence
 
-**Criterio de salida:** publicaciones comparables se asignan correctamente a producto/variante y las ambigüedades no se fusionan en silencio.
+Construir cohortes comparables y `MarketPriceEstimate` sin confundir precio pedido con valor realizable.
 
-## EPIC-03 — Market Intelligence
+**Salida A1:** muestra, estadísticas, fecha, cobertura, confianza, exclusiones y suficiencia reproducibles.
 
-**Problema:** un precio aislado no representa valor de mercado ni liquidez.
+## EPIC-12 — Commercial Pricing
 
-**Objetivo:** estimar precio, demanda, oferta y competencia con ventanas, cobertura y limitaciones visibles.
+Separar escenarios `QUICK`, `TARGET`, `PREMIUM` y `MaximumBuyPrice` conforme a [[PRICING_MODEL]].
 
-**Incluye:** conjuntos comparables, estadísticas robustas, segmentación por condición, señales y frescura.
+**Salida A2:** cada escenario se calcula con soporte o permanece desconocido con motivo; no publica ni compra.
 
-**Criterio de salida:** un producto muestra referencias, media, mediana, rango, dispersión, muestra, fuente y estimaciones explicadas.
+## EPIC-07 — Economics & Sourcing
 
-## EPIC-04 — Resale Intelligence
+### Economics Core A2
 
-**Problema:** revisar manualmente artículos usados infravalorados no escala.
+Costos manuales, contribución, margen, ROI, reservas y máximo de compra.
 
-**Objetivo:** evaluar compra, valor realizable, contribución, velocidad y riesgo de oportunidades `RESALE`.
+### Sourcing Intelligence B
 
-**Criterio de salida:** una oportunidad puede analizarse, compararse, preseleccionarse o rechazarse con razones y límites de prueba.
+Proveedores, ofertas, MOQ, lead time, landed cost, rutas y sensibilidad.
 
-## EPIC-05 — Replenishment Intelligence
+**Salida:** escenarios económicos reproducibles sin costos desconocidos convertidos en cero.
 
-**Problema:** productos de reposición atractivos requieren comprender recurrencia, base instalada y compatibilidad.
+## EPIC-08 — Opportunity Evaluation
 
-**Objetivo:** evaluar consumibles/repuestos y su demanda recurrente dentro de un ecosistema.
+Producir score, riesgo, confianza, cobertura, gates y explicación versionados. Los pesos iniciales permanecen `UNCALIBRATED`.
 
-**Incluye:** `ProductEcosystem`, `BaseProduct`, intervalo de reposición, compatibilidad y scores específicos.
+## EPIC-04 — Resale Decision
 
-**Criterio de salida:** una oportunidad `REPLENISHMENT` explica recurrencia, cobertura compatible, economía y riesgos.
+Evaluar una publicación/producto usado y decidir investigar, descartar, negociar externamente o preseleccionar una prueba.
 
-## EPIC-06 — Niche Discovery
-
-**Problema:** las mejores oportunidades pueden estar en nichos no evidentes.
-
-**Objetivo:** proponer y priorizar nichos con demanda, recurrencia, competencia favorable y profundidad de catálogo.
-
-**Criterio de salida:** un candidato de nicho tiene hipótesis, evidencia, `NicheScore`, productos iniciales y plan de investigación.
-
-## EPIC-07 — Sourcing Intelligence
-
-**Problema:** precio de proveedor sin logística, MOQ, impuestos y confiabilidad produce márgenes ficticios.
-
-**Objetivo:** comparar ofertas y calcular landed cost con supuestos trazables.
-
-**Criterio de salida:** cada escenario económico relevante identifica oferta, moneda, cantidad, costos, lead time y riesgos.
-
-## EPIC-08 — Opportunity Scoring
-
-**Problema:** oportunidades heterogéneas no son comparables y los rankings opacos inducen falsa precisión.
-
-**Objetivo:** normalizar indicadores y producir score, riesgo, confianza, cobertura, gates y explicación versionados.
-
-**Criterio de salida:** los mismos inputs/versión reproducen el resultado y cada recomendación expone factores dominantes y faltantes.
+**Salida A2:** decisión reproducible con evidencia, pricing, economía, liquidez, riesgo y límites.
 
 ## EPIC-09 — Experimentation
 
-**Problema:** una investigación prometedora no demuestra demanda real.
+Congelar hipótesis/predicciones, aprobar una prueba acotada, registrar resultados y decidir validar, rechazar o modificar.
 
-**Objetivo:** diseñar pruebas acotadas y comparar predicción con resultado.
+**Salida A3:** experimento Lite cerrado y comparado con benchmark.
 
-**Criterio de salida:** una oportunidad recorre `SHORTLISTED → TESTING → VALIDATED/REJECTED` con criterios previos, métricas y decisión.
+## EPIC-05 — Replenishment Intelligence
+
+Evaluar consumibles/repuestos mediante ciclo de reposición, base instalada, compatibilidad, demanda, economía y recurrencia.
+
+## EPIC-14 — Product & Catalog Relations
+
+Representar accesorios, consumibles, reemplazos, sustitutos, complementos y bundles con evidencia append-only. Compatibility conserva reglas especializadas.
+
+## EPIC-06 — Niche & Catalog Discovery
+
+Analizar nichos, profundidad de SKU, catálogo y bundles sin depender inicialmente de agentes autónomos.
+
+## EPIC-13 — Seasonality Intelligence
+
+Crear perfiles temporales con baseline, peaks, evergreen/insuficiencia, lead time, confianza y evidencia. Se activa sólo tras su puerta de datos.
 
 ## EPIC-10 — Learning
 
-**Problema:** sin calibración, el sistema repite sesgos y errores.
-
-**Objetivo:** medir error por cohorte y versionar mejoras de reglas y pesos.
-
-**Criterio de salida:** existe suficiente historial, una evaluación retrospectiva y un cambio versionado que mejora métricas fuera de muestra.
+Medir error por cohorte y versionar mejoras verificadas fuera de muestra.
 
 ## EPIC-11 — Platform Access
 
-**Problema:** varios usuarios necesitan trabajar sin exponer datos de otros espacios ni duplicar físicamente la plataforma.
-
-**Objetivo:** autenticar usuarios y aislar datos comerciales por workspace, permitiendo colaboración explícita.
-
-**Incluye:** login, logout, workspace personal, membresías, selección de contexto y políticas RLS.
-
-**Criterio de salida:** usuarios autenticados sólo pueden leer o modificar workspaces autorizados y existen pruebas negativas de acceso cruzado.
+Autenticar y aislar datos por workspace antes de uso real multiusuario. Conservado, pero fuera del camino crítico A1–A3 según [[ADR-008]].
 
 ## Reglas de gestión
 
-- Una feature debe pertenecer a una épica.
-- Una historia debe identificar resultado observable y criterios de aceptación.
-- Una épica no se cierra por cantidad de tareas, sino por su criterio de salida.
-- Cambios de alcance se reflejan en [[PRD]], [[ROADMAP]] y [[CHANGELOG]] cuando corresponda.
+- una feature pertenece a una épica;
+- una historia tiene resultado y aceptación verificables;
+- una épica se cierra por criterio de salida, no por cantidad de tareas;
+- una capacidad documentada como futura no se presenta como implementada;
+- cambios de alcance actualizan PRD, roadmap, backlog y changelog.

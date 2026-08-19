@@ -3,7 +3,9 @@ type: experiment
 id: EXP-NNN
 status: draft
 opportunity_id:
-product:
+opportunity_strategy:
+opportunity_subject:
+product: # opcional para sujetos no-producto futuros
 owner:
 created: YYYY-MM-DD
 updated: YYYY-MM-DD
@@ -16,6 +18,9 @@ updated: YYYY-MM-DD
 ## Evidencia de entrada
 
 - Opportunity Score / versión:
+- Market Price Estimate / versión:
+- Pricing Recommendation / versión:
+- Maximum Buy / versión:
 - Confidence / coverage:
 - Riesgos y gates:
 - Referencias:
@@ -57,6 +62,6 @@ inventory_turnover_days:
 
 ## Decisión
 
-- Outcome:
+- Outcome: # validated | rejected | inconclusive
 - Reason:
-- Next action:
+- Next action: # scale | reject | modify | research

@@ -1,4 +1,6 @@
 import type { CanonicalDataset } from "@/contracts/canonical-dataset.schema";
+import { buildComparableCohort } from "@/domain/comparable-cohort";
+import { calculateMarketPriceStatistics } from "@/domain/market-price-estimate";
 
 export type ComparableFilter = {
   workspaceId: string;
@@ -8,6 +10,7 @@ export type ComparableFilter = {
   priceType: "ASKING" | "SOLD";
   currency: "CLP";
   asOf: string;
+  windowStart?: string | null;
 };
 
 export type MarketStatistics = {
@@ -19,92 +22,40 @@ export type MarketStatistics = {
   maximum: number;
   range: number;
   warnings: string[];
-  methodVersion: "market-statistics-v0.1.0";
+  methodVersion: "market-statistics-v0.2.0";
 };
-
-function roundHalfUp(value: bigint, divisor: bigint): bigint {
-  return (value + divisor / 2n) / divisor;
-}
 
 export function calculateCurrentMarketStatistics(
   dataset: CanonicalDataset,
   filter: ComparableFilter,
 ): MarketStatistics {
-  const marketplaceIds = new Set(
-    dataset.marketplaces
-      .filter((marketplace) => marketplace.marketId === filter.marketId)
-      .map((marketplace) => marketplace.id),
-  );
-  const eligibleListingIds = new Set(
-    dataset.listings
-      .filter(
-        (listing) =>
-          listing.workspaceId === filter.workspaceId &&
-          marketplaceIds.has(listing.marketplaceId) &&
-          listing.productId === filter.productId &&
-          listing.condition === filter.condition,
-      )
-      .map((listing) => listing.id),
-  );
+  const cohort = buildComparableCohort(dataset, {
+    ...filter,
+    windowStart: filter.windowStart ?? null,
+  });
+  const statistics = calculateMarketPriceStatistics(cohort);
 
-  const latestByListing = new Map<
-    string,
-    CanonicalDataset["priceObservations"][number]
-  >();
-
-  for (const observation of dataset.priceObservations) {
-    if (
-      !eligibleListingIds.has(observation.listingId) ||
-      observation.workspaceId !== filter.workspaceId ||
-      observation.observedAt > filter.asOf ||
-      observation.condition !== filter.condition ||
-      observation.priceType !== filter.priceType ||
-      observation.price.currency !== filter.currency ||
-      observation.qualityStatus !== "ELIGIBLE"
-    ) {
-      continue;
-    }
-
-    const current = latestByListing.get(observation.listingId);
-    if (!current || observation.observedAt > current.observedAt) {
-      latestByListing.set(observation.listingId, observation);
-    }
-  }
-
-  const bigintValues = [...latestByListing.values()]
-    .map((observation) => {
-      if (!/^\d+$/.test(observation.price.amount)) {
-        throw new Error("Las estadísticas CLP requieren pesos enteros.");
-      }
-      return BigInt(observation.price.amount);
-    })
-    .sort((left, right) => (left < right ? -1 : left > right ? 1 : 0));
-
-  if (bigintValues.length === 0) {
+  if (
+    statistics.mean === null ||
+    statistics.median === null ||
+    statistics.minimum === null ||
+    statistics.maximum === null ||
+    statistics.range === null
+  ) {
     throw new Error(
       "No existen observaciones comparables para el filtro solicitado.",
     );
   }
 
-  const count = BigInt(bigintValues.length);
-  const sum = bigintValues.reduce((total, value) => total + value, 0n);
-  const middle = Math.floor(bigintValues.length / 2);
-  const median =
-    bigintValues.length % 2 === 0
-      ? roundHalfUp(bigintValues[middle - 1] + bigintValues[middle], 2n)
-      : bigintValues[middle];
-  const minimum = bigintValues[0];
-  const maximum = bigintValues[bigintValues.length - 1];
-
   return {
-    values: bigintValues.map(Number),
-    sampleSize: bigintValues.length,
-    mean: Number(roundHalfUp(sum, count)),
-    median: Number(median),
-    minimum: Number(minimum),
-    maximum: Number(maximum),
-    range: Number(maximum - minimum),
-    warnings: bigintValues.length < 4 ? ["SMALL_SAMPLE"] : [],
-    methodVersion: "market-statistics-v0.1.0",
+    values: statistics.values,
+    sampleSize: statistics.sampleSize,
+    mean: statistics.mean,
+    median: statistics.median,
+    minimum: statistics.minimum,
+    maximum: statistics.maximum,
+    range: statistics.range,
+    warnings: statistics.sampleSize < 4 ? ["SMALL_SAMPLE"] : [],
+    methodVersion: "market-statistics-v0.2.0",
   };
 }

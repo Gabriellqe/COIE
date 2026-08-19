@@ -8,7 +8,8 @@ import {
   canonicalDatasetSchema,
   type CanonicalDataset,
 } from "@/contracts/canonical-dataset.schema";
-import { calculateCurrentMarketStatistics } from "@/domain/market-statistics";
+import { buildComparableCohort } from "@/domain/comparable-cohort";
+import { estimateMarketPrice } from "@/domain/market-price-estimate";
 
 const dataset: CanonicalDataset = canonicalDatasetSchema.parse(fixture);
 
@@ -23,7 +24,7 @@ function buildDetail(id: string): OpportunityDetail | null {
   );
   if (!product) return null;
 
-  const statistics = calculateCurrentMarketStatistics(dataset, {
+  const cohort = buildComparableCohort(dataset, {
     workspaceId: opportunity.workspaceId,
     marketId: opportunity.marketId,
     productId: product.id,
@@ -31,6 +32,29 @@ function buildDetail(id: string): OpportunityDetail | null {
     priceType: "ASKING",
     currency: "CLP",
     asOf: dataset.generatedAt,
+    windowStart: null,
+  });
+  const marketPriceEstimate = estimateMarketPrice(cohort, {
+    calculatedAt: dataset.generatedAt,
+  });
+  const sourceById = new Map(
+    dataset.dataSources.map((source) => [source.id, source]),
+  );
+  const listingById = new Map(
+    dataset.listings.map((listing) => [listing.id, listing]),
+  );
+  const evidenceSources = cohort.sourceIds.flatMap((sourceId) => {
+    const source = sourceById.get(sourceId);
+    return source
+      ? [
+          {
+            id: source.id,
+            name: source.name,
+            method: source.accessMethod,
+            status: source.status,
+          },
+        ]
+      : [];
   });
 
   return {
@@ -38,16 +62,34 @@ function buildDetail(id: string): OpportunityDetail | null {
     productName: product.canonicalName,
     type: opportunity.opportunityType,
     status: opportunity.status,
-    medianMarketPrice: statistics.median,
-    sampleSize: statistics.sampleSize,
+    medianAskingPrice: marketPriceEstimate.centralEstimate,
+    sampleSize: marketPriceEstimate.sampleSize,
+    marketEvidenceStatus: marketPriceEstimate.status,
     scoreStatus: opportunity.scoreStatus,
     hypothesis: opportunity.hypothesis,
-    statistics,
-    sources: dataset.dataSources.map((source) => source.name),
-    excludedObservations: dataset.priceObservations.filter(
-      (observation) => observation.qualityStatus === "EXCLUDED",
-    ).length,
-    dataset,
+    marketPriceEstimate,
+    evidenceSources,
+    evidenceObservations: cohort.members.flatMap((member) => {
+      const listing = listingById.get(member.listingId);
+      const source = sourceById.get(member.sourceId);
+      if (!listing || !source) return [];
+      return [
+        {
+          observationId: member.observationId,
+          listingId: member.listingId,
+          title: listing.rawTitle,
+          sourceName: source.name,
+          method: source.accessMethod,
+          observedAt: member.observedAt,
+          amount: member.amount,
+        },
+      ];
+    }),
+    exclusions: cohort.exclusions,
+    historicalSnapshotCount: dataset.listingSnapshots.filter((snapshot) => {
+      const listing = listingById.get(snapshot.listingId);
+      return listing?.productId === product.id;
+    }).length,
   };
 }
 
@@ -62,8 +104,9 @@ export class DemoOpportunityRepository implements OpportunityReadRepository {
           productName: detail.productName,
           type: detail.type,
           status: detail.status,
-          medianMarketPrice: detail.medianMarketPrice,
+          medianAskingPrice: detail.medianAskingPrice,
           sampleSize: detail.sampleSize,
+          marketEvidenceStatus: detail.marketEvidenceStatus,
           scoreStatus: detail.scoreStatus,
         },
       ];

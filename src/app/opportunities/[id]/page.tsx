@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getOpportunityDetail } from "@/application/queries/get-opportunity-detail";
+import type { ComparableExclusionReason } from "@/domain/comparable-cohort";
 import { demoOpportunityRepository } from "@/infrastructure/repositories/demo-opportunity-repository";
 
 const clp = new Intl.NumberFormat("es-CL", {
@@ -8,6 +9,25 @@ const clp = new Intl.NumberFormat("es-CL", {
   currency: "CLP",
   maximumFractionDigits: 0,
 });
+const dateTime = new Intl.DateTimeFormat("es-CL", {
+  dateStyle: "medium",
+  timeStyle: "short",
+  timeZone: "America/Santiago",
+});
+const exclusionLabels: Record<ComparableExclusionReason, string> = {
+  AFTER_CUTOFF: "Posterior a la fecha de corte",
+  BEFORE_WINDOW: "Anterior a la ventana",
+  SUPERSEDED: "Reemplazada por una observación más reciente",
+  CONDITION_UNKNOWN: "Condición desconocida",
+  CONDITION_MISMATCH: "Condición incompatible",
+  PRICE_TYPE_MISMATCH: "Tipo de precio incompatible",
+  CURRENCY_MISMATCH: "Moneda incompatible",
+  QUALITY_EXCLUDED: "Excluida por calidad",
+};
+
+function formatClp(value: number | null): string {
+  return value === null ? "—" : clp.format(value);
+}
 
 export default async function OpportunityDetailPage({
   params,
@@ -18,8 +38,16 @@ export default async function OpportunityDetailPage({
   const opportunity = await getOpportunityDetail(demoOpportunityRepository, id);
   if (!opportunity) notFound();
 
-  const chartMinimum = Math.max(opportunity.statistics.minimum - 5000, 0);
-  const chartSpan = opportunity.statistics.maximum - chartMinimum || 1;
+  const estimate = opportunity.marketPriceEstimate;
+  const statistics = estimate.statistics;
+  const canRenderRange =
+    statistics.minimum !== null && statistics.maximum !== null;
+  const chartMinimum = canRenderRange
+    ? Math.max(statistics.minimum! - 5000, 0)
+    : 0;
+  const chartSpan = canRenderRange
+    ? statistics.maximum! - chartMinimum || 1
+    : 1;
   const markerPosition = (value: number) =>
     `${((value - chartMinimum) / chartSpan) * 100}%`;
 
@@ -31,9 +59,9 @@ export default async function OpportunityDetailPage({
         </Link>
         <nav>
           <Link href="/">Panel</Link>
-          <a href="#evidencia">Investigaciones</a>
-          <a href="#experimentos">Experimentos</a>
-          <a href="#configuracion">Configuración</a>
+          <a href="#evidencia">Evidencia</a>
+          <a href="#exclusiones">Exclusiones</a>
+          <a href="#faltantes">Faltantes</a>
         </nav>
         <span className="avatar">GD</span>
       </header>
@@ -44,8 +72,8 @@ export default async function OpportunityDetailPage({
         </Link>
         <div className="detail-title-row">
           <div>
-            <p className="eyebrow">Detalle analítico B</p>
-            <h1>Inteligencia de oportunidad</h1>
+            <p className="eyebrow">MVP-A1 · Market Evidence</p>
+            <h1>Evidencia de precios observados</h1>
           </div>
           <span className="demo-pill">DATOS DEMO</span>
         </div>
@@ -53,29 +81,38 @@ export default async function OpportunityDetailPage({
         <div className="filter-row">
           <span className="filter-chip">Chile</span>
           <span className="filter-chip">CLP</span>
-          <span className="filter-chip">RESALE</span>
+          <span className="filter-chip">USED</span>
+          <span className="filter-chip">ASKING</span>
           <span className="filter-chip">NK150 · no verificado</span>
         </div>
 
         <section className="analysis-grid">
           <article className="hero-analysis-card">
-            <span className="status research">Investigando</span>
+            <span
+              className={`status ${estimate.status === "CALCULATED" ? "research" : "warning"}`}
+            >
+              {estimate.status === "CALCULATED"
+                ? "Cohorte calculada"
+                : "Datos insuficientes"}
+            </span>
             <h2>{opportunity.productName}</h2>
             <div className="metric-columns">
               <div>
-                <span>Score</span>
-                <strong>—</strong>
-                <small>No calibrado</small>
+                <span>Estimación central ASKING</span>
+                <strong>{formatClp(estimate.centralEstimate)}</strong>
+                <small>No es precio realizable ni recomendación</small>
               </div>
               <div>
-                <span>Mediana</span>
-                <strong>{clp.format(opportunity.statistics.median)}</strong>
-                <small>{opportunity.statistics.sampleSize} comparables</small>
+                <span>Muestra</span>
+                <strong>{estimate.sampleSize}</strong>
+                <small>
+                  Mínimo configurado: {estimate.minimumComparableCount}
+                </small>
               </div>
               <div>
                 <span>Confianza</span>
                 <strong>—</strong>
-                <small>Pendiente</small>
+                <small>No evaluada</small>
               </div>
             </div>
           </article>
@@ -84,35 +121,40 @@ export default async function OpportunityDetailPage({
             <div className="panel-heading compact">
               <div>
                 <p className="eyebrow">USED · ASKING · CLP</p>
-                <h2>Precio observado</h2>
+                <h2>Distribución observada</h2>
               </div>
-              <span className="muted">
-                {opportunity.statistics.methodVersion}
-              </span>
+              <span className="muted">{estimate.calculationVersion}</span>
             </div>
-            <div
-              className="range-chart"
-              aria-label="Rango de precios comparables"
-            >
-              <div className="range-line" />
-              {opportunity.statistics.values.map((value) => (
-                <span
-                  className="range-marker"
-                  key={value}
-                  style={{ left: markerPosition(value) }}
-                  title={clp.format(value)}
-                />
-              ))}
-            </div>
-            <div className="range-labels">
-              <span>{clp.format(opportunity.statistics.minimum)}</span>
-              <strong>
-                Mediana: {clp.format(opportunity.statistics.median)}
-              </strong>
-              <span>{clp.format(opportunity.statistics.maximum)}</span>
-            </div>
+            {canRenderRange ? (
+              <>
+                <div
+                  className="range-chart"
+                  aria-label="Rango de precios comparables"
+                >
+                  <div className="range-line" />
+                  {opportunity.evidenceObservations.map((observation) => (
+                    <span
+                      className="range-marker"
+                      key={observation.observationId}
+                      style={{ left: markerPosition(observation.amount) }}
+                      title={clp.format(observation.amount)}
+                    />
+                  ))}
+                </div>
+                <div className="range-labels">
+                  <span>{formatClp(statistics.minimum)}</span>
+                  <strong>Mediana: {formatClp(statistics.median)}</strong>
+                  <span>{formatClp(statistics.maximum)}</span>
+                </div>
+              </>
+            ) : (
+              <div className="empty-evidence">
+                No existen observaciones elegibles para esta cohorte.
+              </div>
+            )}
             <p className="chart-note">
-              Muestra pequeña: no se excluyen outliers automáticamente.
+              IQR: {formatClp(statistics.iqr)} · método{" "}
+              {statistics.methodVersion}
             </p>
           </article>
         </section>
@@ -121,23 +163,37 @@ export default async function OpportunityDetailPage({
           <article className="panel">
             <div className="panel-heading compact">
               <div>
-                <p className="eyebrow">Hipótesis</p>
-                <h2>Qué estamos evaluando</h2>
+                <p className="eyebrow">Cohorte versionada</p>
+                <h2>Definición y suficiencia</h2>
               </div>
             </div>
             <p className="hypothesis">{opportunity.hypothesis}</p>
             <dl className="stat-list">
               <div>
-                <dt>Media</dt>
-                <dd>{clp.format(opportunity.statistics.mean)}</dd>
+                <dt>Media observada</dt>
+                <dd>{formatClp(statistics.mean)}</dd>
               </div>
               <div>
                 <dt>Rango</dt>
-                <dd>{clp.format(opportunity.statistics.range)}</dd>
+                <dd>{formatClp(statistics.range)}</dd>
+              </div>
+              <div>
+                <dt>Q1 / Q3</dt>
+                <dd>
+                  {formatClp(statistics.q1)} / {formatClp(statistics.q3)}
+                </dd>
+              </div>
+              <div>
+                <dt>Fecha de corte</dt>
+                <dd>{dateTime.format(new Date(estimate.asOf))}</dd>
               </div>
               <div>
                 <dt>Histórico preservado</dt>
-                <dd>{opportunity.dataset.listingSnapshots.length} snapshots</dd>
+                <dd>{opportunity.historicalSnapshotCount} snapshots</dd>
+              </div>
+              <div>
+                <dt>Modo</dt>
+                <dd>{estimate.evidenceMode}</dd>
               </div>
             </dl>
           </article>
@@ -145,40 +201,103 @@ export default async function OpportunityDetailPage({
           <article className="panel" id="evidencia">
             <div className="panel-heading compact">
               <div>
-                <p className="eyebrow">Calidad de evidencia</p>
-                <h2>Procedencia y faltantes</h2>
+                <p className="eyebrow">Procedencia exacta</p>
+                <h2>Inputs incluidos</h2>
               </div>
             </div>
             <div className="evidence-summary">
               <div>
-                <strong>{opportunity.sources.length}</strong>
-                <span>fuentes candidatas</span>
+                <strong>{estimate.coverage.sourceCount}</strong>
+                <span>fuentes utilizadas</span>
               </div>
               <div>
-                <strong>{opportunity.excludedObservations}</strong>
-                <span>observación excluida</span>
+                <strong>{estimate.coverage.includedCount}</strong>
+                <span>observaciones incluidas</span>
               </div>
               <div>
-                <strong>{opportunity.statistics.sampleSize}</strong>
-                <span>comparables actuales</span>
+                <strong>{estimate.coverage.excludedCount}</strong>
+                <span>exclusiones explicadas</span>
               </div>
             </div>
+            <div className="evidence-table-wrap">
+              <table className="evidence-table">
+                <thead>
+                  <tr>
+                    <th>Publicación</th>
+                    <th>Fuente / método</th>
+                    <th>Observada</th>
+                    <th>Precio pedido</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {opportunity.evidenceObservations.map((observation) => (
+                    <tr key={observation.observationId}>
+                      <td>{observation.title}</td>
+                      <td>
+                        {observation.sourceName}
+                        <small className="table-subtitle">
+                          {observation.method}
+                        </small>
+                      </td>
+                      <td>
+                        {dateTime.format(new Date(observation.observedAt))}
+                      </td>
+                      <td>{clp.format(observation.amount)}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
             <ul className="source-list">
-              {opportunity.sources.map((source) => (
-                <li key={source}>
-                  <span>{source}</span>
+              {opportunity.evidenceSources.map((source) => (
+                <li key={source.id}>
+                  <span>{source.name}</span>
                   <em>Pendiente revisión de acceso</em>
                 </li>
               ))}
             </ul>
+          </article>
+        </section>
+
+        <section className="detail-lower-grid evidence-secondary-grid">
+          <article className="panel" id="exclusiones">
+            <div className="panel-heading compact">
+              <div>
+                <p className="eyebrow">Auditoría de cohorte</p>
+                <h2>Exclusiones</h2>
+              </div>
+            </div>
+            <ul className="exclusion-list">
+              {opportunity.exclusions.map((exclusion) => (
+                <li key={exclusion.observationId}>
+                  <div>
+                    <strong>{exclusionLabels[exclusion.reason]}</strong>
+                    <span>{exclusion.observationId}</span>
+                  </div>
+                  {exclusion.detail && <em>{exclusion.detail}</em>}
+                </li>
+              ))}
+            </ul>
+          </article>
+
+          <article className="panel" id="faltantes">
+            <div className="panel-heading compact">
+              <div>
+                <p className="eyebrow">Límites del incremento</p>
+                <h2>No calculado</h2>
+              </div>
+            </div>
             <div className="missing-box">
-              <strong>Datos faltantes</strong>
+              <strong>Decisiones comerciales pendientes</strong>
               <ul>
-                <li>Compatibilidad real de la pieza</li>
-                <li>Costos de compra y venta</li>
-                <li>Evidencia de venta confirmada suficiente</li>
+                <li>Valor realizable: sin evidencia suficiente</li>
+                <li>Quick, Target y Premium: pertenecen a MVP-A2</li>
+                <li>Maximum Buy y economía: pertenecen a MVP-A2</li>
+                <li>Liquidez/velocidad: sin ventas o proxy acordado</li>
+                <li>Compatibilidad NK150: no verificada</li>
               </ul>
             </div>
+            <p className="confidence-note">{estimate.confidenceReason}</p>
           </article>
         </section>
       </div>

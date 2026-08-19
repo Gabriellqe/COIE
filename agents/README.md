@@ -7,7 +7,8 @@ Estas notas resumen responsabilidades operativas. El contrato, la autoridad y la
 | Discovery | [[DISCOVERY_AGENT]] |
 | Market | [[MARKET_AGENT]] |
 | Competition | [[COMPETITION_AGENT]] |
-| Pricing | [[PRICING_AGENT]] |
+| Price Intelligence | [[PRICING_AGENT]] |
+| Commercial Pricing | [[COMMERCIAL_PRICING_AGENT]] |
 | Sourcing | [[SOURCING_AGENT]] |
 | Compatibility | [[COMPATIBILITY_AGENT]] |
 | Economics | [[ECONOMICS_AGENT]] |

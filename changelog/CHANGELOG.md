@@ -2,6 +2,49 @@
 
 Los cambios materiales del proyecto se registran por fecha. El documento sigue una estructura inspirada en Keep a Changelog, sin asumir todavía versiones de software publicadas.
 
+## 2026-08-19 — Reconciliación conceptual y MVP-A
+
+### Added
+
+- [[ADR-006]]: Opportunity como agregado central y perfil MVP-A Resale;
+- [[ADR-007]]: MarketPriceEstimate, PricingRecommendation y MaximumBuyPrice separados;
+- [[ADR-008]]: Platform Access diferido del primer ciclo comercial;
+- [[OPPORTUNITY_MODEL]], [[PRICING_MODEL]] y [[SEASONALITY]];
+- investigación [[COIE-CONCEPT-RECONCILIATION-2026-08-19]];
+- épicas de Commercial Pricing, Seasonality y Product/Catalog Relations;
+- historias para Resale Decision, escenarios de venta, máximo de compra, liquidez, relaciones y estacionalidad.
+- cohorte comparable A1 con exclusiones explícitas, último snapshot antes del corte y procedencia limitada a inputs usados;
+- `MarketPriceEstimate v0.1.0` DEMO con suficiencia, estimación nullable, cuartiles/IQR, cobertura descriptiva e inputs versionados;
+- pruebas de cohortes vacías/insuficientes, exclusiones, moneda incompatible y no reactivación de precios antiguos.
+
+### Changed
+
+- COIE se organiza por `DISCOVER → EVALUATE → TEST → MEASURE → SCALE/REJECT/MODIFY` y cinco preguntas comerciales;
+- el primer alcance pasa de `RESALE + REPLENISHMENT` a MVP-A `RESALE`, sin eliminar Replenishment del roadmap;
+- el roadmap se reordena en A1 Market Evidence, A2 Resale Decision y A3 Experimentation Lite;
+- Economics Core se separa de Sourcing Intelligence completo;
+- Experimentation Lite se adelanta para cerrar el primer ciclo;
+- Supabase Auth/RLS deja de bloquear MVP-A, manteniendo `workspace_id` y la arquitectura objetivo;
+- el shell renombra `medianMarketPrice` a `medianAskingPrice` y deja de mostrar cero por ausencia;
+- `TESTING → RESEARCHING` permite resultados inconclusos o reformulación;
+- scoring `RESALE` permanece candidato no calibrado; Replenishment queda como perfil futuro.
+- el detalle analítico muestra Market Evidence, fecha de corte, inputs y exclusiones sin presentar ASKING como valor realizable.
+
+### Not implemented
+
+- sujetos Opportunity no-producto;
+- Quick/Target/Premium, Maximum Buy, liquidez y economía calculados;
+- ProductRelationship, Seasonality, Replenishment, Learning y agentes autónomos;
+- Supabase Auth/RLS y conectores reales.
+- persistencia append-only de carga manual y del histórico de `MarketPriceEstimate`.
+
+### Open
+
+- FND-007: primera fuente real permitida;
+- B1: caso NK150 real;
+- inputs y política para Maximum Buy;
+- evidencia de velocidad/liquidez y límites de experimento.
+
 ## 2026-08-18 — Sprint 0 en ejecución
 
 ### Added
@@ -17,6 +60,7 @@ Los cambios materiales del proyecto se registran por fecha. El documento sigue u
 - estadística versionada de comparables actuales mediante último precio por listing;
 - configuración de pnpm, Tailwind, Vitest, ESLint, Prettier, TypeScript y CI;
 - validador de enlaces Obsidian e IDs documentales.
+- investigación fechada de adquisición de datos para Chile: API, costos publicados, límites, retención, cumplimiento y gates de autorización para Mercado Libre y Facebook Marketplace.
 
 ### Changed
 
@@ -26,6 +70,7 @@ Los cambios materiales del proyecto se registran por fecha. El documento sigue u
 - el método inicial de adquisición es carga manual trazable;
 - el dashboard principal sigue el concepto A y el detalle el concepto B.
 - FND-009, FND-010 y FND-011 pasan validación automatizada y revisión en navegador local.
+- FND-007 conserva estado `IN_PROGRESS`: la API de Mercado Libre es candidata, pero falta autorización contractual para la finalidad analítica; Facebook Marketplace no queda autorizado para automatización.
 
 ### Open
 

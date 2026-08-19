@@ -1,8 +1,8 @@
 ---
 type: product-spec
 status: proposed
-version: 0.1
-updated: 2026-08-12
+version: 0.2
+updated: 2026-08-19
 ---
 
 # Sistema de experimentos
@@ -10,6 +10,8 @@ updated: 2026-08-12
 ## 1. Propósito
 
 Convertir una oportunidad teórica en una prueba acotada que permita decidir si validar, rechazar o investigar más, sin escalar por intuición.
+
+MVP-A3 implementa primero **Experimentation Lite**. El sistema operativo completo de inventario, ventas e integraciones se incorpora después de validar el ciclo.
 
 ## 2. Principios
 
@@ -75,7 +77,7 @@ results:
 decision:
   outcome: # validated | rejected | inconclusive
   reason:
-  next_action:
+  next_action: # scale | reject | modify | research
 ```
 
 ## 4. Flujo
@@ -88,6 +90,8 @@ decision:
 6. Cerrar al cumplirse duración, éxito o stop condition.
 7. Comparar predicción y resultado.
 8. Registrar decisión y actualizar la oportunidad.
+
+Un resultado `INCONCLUSIVE` o una acción `MODIFY` devuelve la oportunidad a `RESEARCHING` con nueva versión de hipótesis/plan; no sobrescribe la prueba original.
 
 ## 5. Métricas
 
@@ -117,7 +121,25 @@ Las métricas de plataforma se identifican como observadas, estimadas o no dispo
 
 La oportunidad pasa a `VALIDATED` sólo mediante revisión humana de un experimento cerrado. `SCALING` exige una decisión posterior y un nuevo límite de capital.
 
-## 7. Comparación de predicción
+## 7. Perfil Lite
+
+MVP-A3 requiere únicamente:
+
+```text
+opportunityId
+hypothesis
+channel / quantity / duration
+capitalLimit / maximumLoss
+predictionSnapshotRefs
+successCriteria / stopConditions
+approvedBy / approvedAt
+observations append-only
+result / decidedBy / decidedAt / reason
+```
+
+Al aprobar se congelan las referencias disponibles de MarketPriceEstimate, PricingRecommendation, MaximumBuyPrice, EconomicsRun y ScoreRun. No requiere todavía `InventoryLot`, conexión con canales ni automatización.
+
+## 8. Comparación de predicción
 
 ```text
 absolute_error = actual - predicted
@@ -126,7 +148,7 @@ percentage_error = (actual - predicted) / max(abs(predicted), epsilon)
 
 Para métricas con cero válido se usa una función adecuada y se evita porcentaje engañoso. Los errores se agregan por tipo, mercado y cohorte antes de calibrar [[SCORING_MODEL]].
 
-## 8. Primer benchmark del MVP
+## 9. Primer benchmark del MVP
 
 Antes del primer experimento comercial se registra una investigación manual básica con:
 
@@ -137,9 +159,11 @@ Antes del primer experimento comercial se registra una investigación manual bá
 
 Se ejecuta COIE sobre el mismo alcance y se comparan cobertura, trazabilidad, tiempo y error contra resultados reales. No se modifica el benchmark después de conocer el resultado.
 
-## 9. Referencias
+## 10. Referencias
 
 - [[PRD]]
 - [[SCORING_MODEL]]
 - [[DATA_MODEL]]
 - [[USER_STORIES]]
+- [[ADR-006]]
+- [[PRICING_MODEL]]

@@ -1,229 +1,287 @@
 ---
 type: prd
 status: draft
-version: 0.2
-updated: 2026-08-18
+version: 0.3
+updated: 2026-08-19
 ---
 
-# Product Requirements Document — MVP
+# Product Requirements Document — MVP-A Resale Decision
 
 ## 1. Objetivo
 
-Demostrar que COIE puede analizar productos y priorizar oportunidades `RESALE` y `REPLENISHMENT` de forma más consistente, trazable y reutilizable que una investigación manual básica.
+Demostrar que COIE puede transformar una publicación o producto usado en una decisión `RESALE` trazable y comprobable:
 
-El primer incremento se valida en Chile, con `CLP` como moneda base y un caso `RESALE` de repuesto usado asociado a NK150. Esta elección no limita la arquitectura a un único mercado o categoría.
+```text
+evidencia de mercado
+→ escenarios de venta
+→ precio máximo de compra
+→ economía/riesgo/confianza
+→ decisión humana
+→ prueba acotada
+→ resultado y aprendizaje
+```
 
-## 2. Alcance funcional
+El perfil inicial se valida en Chile/CLP con un caso asociado a NK150. Esto no restringe el modelo objetivo a un país o categoría.
 
-### Entrada
+## 2. Alcance incremental
 
-El usuario puede iniciar un análisis mediante:
+### MVP-A1 — Market Evidence
 
-- nombre de producto;
-- URL de una publicación;
-- categoría o búsqueda;
-- nicho.
+- entrada manual por URL o identificación de producto;
+- producto, publicación, condición y variante;
+- observaciones históricas trazables;
+- cohorte comparable por mercado, condición, moneda, `ASKING/SOLD` y fecha de corte;
+- estadísticas y estado de suficiencia.
 
-### Procesamiento
+### MVP-A2 — Resale Decision
 
-El sistema debe:
+- `MarketPriceEstimate`;
+- `PricingRecommendation` con escenarios disponibles;
+- `MaximumBuyPrice` o gate por información insuficiente;
+- Economics Core con costos manuales;
+- demanda/liquidez mediante señales o proxies explícitos;
+- riesgo, score no calibrado, confianza, cobertura y recomendación humana.
 
-- capturar o recibir múltiples referencias de mercado;
-- conservar fuente, instante de observación y moneda;
-- normalizar la identidad del producto y su condición;
-- calcular estadísticas de precio;
-- producir estimaciones básicas de demanda y competencia;
-- registrar alternativas de abastecimiento y costos;
-- calcular economía unitaria y scores normalizados;
-- expresar incertidumbre, datos faltantes y razones de la recomendación.
+### MVP-A3 — Experimentation Lite
+
+- hipótesis y predicciones congeladas;
+- capital, cantidad, período, éxito y stop conditions;
+- observaciones manuales de resultado;
+- `VALIDATED`, `REJECTED` o `INCONCLUSIVE`;
+- retorno a investigación mediante `MODIFY` cuando corresponda.
+
+## 3. Entradas y salidas
+
+### Entrada MVP-A
+
+- URL o datos estructurados de una publicación;
+- producto + marca/modelo/variante;
+- precio de compra real o hipotético;
+- costos conocidos y objetivo económico.
+
+Categoría, búsqueda y nicho permanecen como entradas futuras de Discovery; no pertenecen a F-01 de MVP-A.
 
 ### Salida
 
-Cada análisis debe producir como mínimo:
-
 ```text
-Product
-Opportunity Type
-Market Price
-Demand Estimate
-Competition Estimate
-Cost Estimate
-Margin Estimate
-Risk Estimate
-Opportunity Score
-Confidence
-Recommendation
+Opportunity
+Strategy / Subject
+Comparable Cohort
+MarketPriceEstimate
+PricingRecommendation: Quick / Target / Premium (si existe evidencia)
+MaximumBuyPrice (si existen inputs suficientes)
+Contribution / ROI (si existen inputs suficientes)
+Liquidity Estimate / Proxy
+RiskScore
+OpportunityScore (UNCALIBRATED inicialmente)
+Confidence / Coverage / Gates
+Recommendation / Next Action
 Evidence Summary
 ```
 
-## 3. Requisitos funcionales
+Una salida sin evidencia suficiente se muestra como `unknown/not computed` con motivo; nunca como cero.
 
-| ID | Requisito | Prioridad |
-|---|---|---|
-| RF-001 | Crear o reutilizar un producto a partir de nombre o URL. | P0 |
-| RF-002 | Registrar publicaciones con marketplace, URL, vendedor, precio, moneda, condición y fecha de captura. | P0 |
-| RF-003 | Registrar observaciones de precio sin sobrescribir el histórico. | P0 |
-| RF-004 | Normalizar referencias que representan el mismo producto y conservar la evidencia original. | P0 |
-| RF-005 | Calcular cantidad de observaciones, media, mediana, mínimo, máximo y dispersión. | P0 |
-| RF-006 | Separar comparables por condición y excluir outliers mediante una regla visible. | P0 |
-| RF-007 | Estimar demanda y competencia con las señales disponibles e indicar su cobertura. | P0 |
-| RF-008 | Registrar proveedor, precio de origen, MOQ, envío, impuestos, aduana y lead time cuando estén disponibles. | P0 |
-| RF-009 | Calcular landed cost, beneficio bruto, margen de contribución y ROI con supuestos visibles. | P0 |
-| RF-010 | Calcular componentes y `OpportunityScore` conforme a [[SCORING_MODEL]]. | P0 |
-| RF-011 | Mostrar una recomendación explicada, riesgos, evidencia a favor y datos faltantes. | P0 |
-| RF-012 | Mantener el ciclo de estados de una oportunidad. | P0 |
-| RF-013 | Convertir una oportunidad preseleccionada en experimento. | P1 |
-| RF-014 | Registrar predicción y resultado real de demanda, margen y velocidad. | P1 |
-| RF-015 | Modelar ecosistemas y compatibilidades para oportunidades `REPLENISHMENT`. | P1 |
-| RF-016 | Listar y ordenar oportunidades en un tablero. | P1 |
-| RF-017 | Filtrar el tablero por tipo, estado, score, riesgo y vigencia. | P1 |
-| RF-018 | Conservar un log de cambios de estado y de versiones del score. | P1 |
-| RF-019 | Autenticar usuarios y aislar datos comerciales por workspace. | P0 |
+## 4. Requisitos funcionales
 
-## 4. Reglas de negocio
+| ID | Requisito | Incremento | Prioridad |
+|---|---|---|---|
+| RF-001 | Crear/reutilizar producto y publicación desde nombre, URL o datos manuales. | A1 | P0 |
+| RF-002 | Registrar publicación con fuente, método, URL, vendedor, precio, moneda, condición y fecha. | A1 | P0 |
+| RF-003 | Agregar observaciones sin sobrescribir histórico. | A1 | P0 |
+| RF-004 | Normalizar referencias equivalentes conservando evidencia original y confianza. | A1 | P0 |
+| RF-005 | Calcular muestra, media, mediana, mínimo, máximo y dispersión por cohorte elegible. | A1 | P0 |
+| RF-006 | Separar condición, variante, moneda y `ASKING/SOLD`; explicar exclusiones/outliers. | A1 | P0 |
+| RF-020 | Crear `MarketPriceEstimate` versionado con fecha, inputs, confianza y cobertura. | A1 | P0 |
+| RF-021 | Producir escenarios `QUICK/TARGET/PREMIUM` sólo con evidencia suficiente o estado desconocido explicado. | A2 | P0 |
+| RF-022 | Calcular `MaximumBuyPrice` con costos, contribución requerida y reservas, o activar gate. | A2 | P0 |
+| RF-023 | Estimar liquidez/velocidad con señal observable o proxy etiquetado. | A2 | P0 |
+| RF-009 | Calcular acquisition/landed cost, contribución, margen y ROI con supuestos visibles. | A2 | P0 |
+| RF-010 | Calcular score, riesgo, confianza, cobertura y gates conforme a [[SCORING_MODEL]]. | A2 | P0 |
+| RF-011 | Explicar recomendación, factores, datos faltantes y siguiente acción. | A2 | P0 |
+| RF-012 | Mantener estados y transiciones auditables de la oportunidad. | A2 | P0 |
+| RF-013 | Crear y aprobar un experimento Lite desde una oportunidad `SHORTLISTED`. | A3 | P0 |
+| RF-014 | Registrar predicción, resultado y error de demanda, margen y velocidad. | A3 | P0 |
+| RF-007 | Estimar demanda y competencia con señales disponibles e indicar cobertura. | A2 | P1 |
+| RF-008 | Comparar proveedor, MOQ, shipping, impuestos, aduana y lead time. | MVP-B | P1 |
+| RF-016 | Listar y ordenar oportunidades en dashboard funcional. | posterior A2 | P1 |
+| RF-017 | Filtrar por estrategia, estado, score, riesgo y vigencia. | posterior A2 | P1 |
+| RF-018 | Conservar log de estados y versiones de cálculos/scores. | A2/A3 | P1 |
+| RF-015 | Modelar reposición, ecosistemas y compatibilidad. | MVP-C | P2 |
+| RF-019 | Autenticar usuarios y aplicar aislamiento RLS. | Platform Access | P2 |
+
+## 5. Reglas de negocio
 
 ### RB-001 — Evidencia mínima
 
-Una oportunidad no puede pasar a `SHORTLISTED` si no tiene:
+Una oportunidad no pasa a `SHORTLISTED` si no tiene:
 
-- al menos tres referencias comparables de precio, salvo excepción documentada;
-- fecha y fuente para cada dato externo utilizado;
-- cálculo económico con moneda y supuestos;
-- desglose de riesgo y confianza.
+- referencias comparables suficientes o excepción explícita;
+- fuente, método y fecha para cada dato externo;
+- condición, variante, moneda y tipo de precio claros;
+- costos críticos y objetivo económico, o gates visibles;
+- riesgo, confianza y cobertura desglosados.
 
-El número tres es un umbral inicial configurable, no una afirmación estadística de suficiencia.
+El umbral inicial de tres comparables es configurable y no afirma suficiencia estadística universal.
 
-### RB-002 — Datos faltantes
+### RB-002 — Desconocidos
 
-Un dato ausente permanece `unknown`; no se transforma en cero ni en valor neutral. La confianza y la cobertura deben reducirse.
+`unknown` no se convierte en cero, neutral ni promedio. Reduce cobertura/confianza o activa un gate.
 
-### RB-003 — Moneda
+### RB-003 — Cohortes
 
-No se agregan precios de monedas diferentes sin una conversión que registre tasa, fuente y fecha.
+No se agregan monedas, condiciones, variantes ni `ASKING/SOLD` incompatibles sin ajuste explícito, trazable y versionado.
 
-### RB-004 — Condición
+### RB-004 — Tres decisiones de precio
 
-Productos nuevos, reacondicionados y usados se comparan por separado, salvo que exista un ajuste explícito y versionado.
+`MarketPriceEstimate`, `PricingRecommendation` y `MaximumBuyPrice` permanecen separados conforme a [[PRICING_MODEL]] y [[ADR-007]].
 
-### RB-005 — Recomendación
+### RB-005 — Quick Sale
 
-El score ordena; no autoriza una compra. La recomendación final incluye el experimento mínimo sugerido y sus límites de capital.
+No se presenta como hecho a partir de publicaciones activas. Requiere ventas/velocidad o un proxy identificado, con método y confianza.
 
-### RB-006 — Riesgo
+### RB-006 — Recomendación y autoridad
 
-Un riesgo crítico regulatorio, de falsificación, seguridad o compatibilidad puede bloquear la recomendación aunque el score bruto sea alto.
+El score ordena y explica; no compra, publica, negocia ni asigna capital. La aprobación es humana.
 
-### RB-007 — Versionado
+### RB-007 — Riesgo
 
-Toda oportunidad conserva la versión de fórmula y de parámetros con la que fue puntuada.
+Un riesgo crítico legal, de seguridad, falsificación o identidad puede bloquear aunque el score bruto sea alto.
 
-## 5. Estados y transiciones
+### RB-008 — Versionado
+
+Toda ejecución conserva inputs, fórmula, parámetros, estado de calibración y fecha.
+
+### RB-009 — DEMO
+
+Datos y resultados DEMO se identifican visiblemente y no se presentan como evidencia comercial real o calibrada.
+
+## 6. Estados y decisiones
 
 ```text
 DISCOVERED → RESEARCHING → SHORTLISTED → TESTING → VALIDATED → SCALING
                          ↘ REJECTED
               RESEARCHING → REJECTED
+                  TESTING → RESEARCHING  (INCONCLUSIVE / MODIFY)
                   TESTING → REJECTED
 ```
 
-- `DISCOVERED`: hipótesis registrada, todavía sin análisis suficiente.
-- `RESEARCHING`: recolección y normalización activas.
-- `SHORTLISTED`: cumple evidencia mínima y merece prueba.
-- `TESTING`: experimento en ejecución.
-- `VALIDATED`: cumplió los criterios definidos antes del experimento.
-- `SCALING`: aumento de capital aprobado por decisión humana.
-- `REJECTED`: no cumple criterios; debe conservar motivo.
+- `DISCOVERED`: hipótesis registrada.
+- `RESEARCHING`: evidencia incompleta o análisis activo.
+- `SHORTLISTED`: cumple gates mínimos y puede diseñar prueba.
+- `TESTING`: experimento aprobado y activo.
+- `VALIDATED`: cumplió criterios predefinidos.
+- `SCALING`: decisión humana posterior con nuevo límite de capital.
+- `REJECTED`: no cumple; conserva motivo.
 
-Reabrir una oportunidad rechazada requiere nueva evidencia y deja registro del cambio.
+## 7. Flujos
 
-## 6. Flujos principales
+### F-01 — Market Evidence
 
-### F-01 — Analizar un producto
+1. Ingresar URL/datos de publicación o producto.
+2. Resolver producto, variante y condición.
+3. Incorporar observaciones con procedencia.
+4. Construir cohorte comparable.
+5. Calcular estadísticas y `MarketPriceEstimate` o suficiencia insuficiente.
 
-1. El usuario ingresa nombre o URL y selecciona el tipo de oportunidad.
-2. El sistema identifica o crea el producto.
-3. Se incorporan referencias y observaciones.
-4. Se revisan comparabilidad, vigencia y procedencia.
-5. Se calculan precio de mercado, economía y señales.
-6. Se genera score, confianza y recomendación.
-7. El usuario descarta, continúa investigando o preselecciona.
+### F-02 — Resale Decision
 
-### F-02 — Validar mediante experimento
+1. Seleccionar evidencia de mercado.
+2. Registrar precio de compra, costos y objetivo.
+3. Evaluar escenarios de venta disponibles.
+4. Calcular economía y máximo de compra o activar gates.
+5. Evaluar liquidez, riesgo, confianza, cobertura y score.
+6. Decidir investigar, negociar externamente, descartar o preseleccionar.
 
-1. El usuario convierte una oportunidad `SHORTLISTED` en experimento.
-2. Define capital, cantidad, duración y umbrales antes de iniciar.
-3. Registra métricas durante la prueba.
-4. El sistema compara predicción y resultado.
-5. El usuario decide validar, rechazar o extender con una justificación.
+### F-03 — Experimentation Lite
 
-## 7. Tablero del MVP
+1. Convertir una oportunidad `SHORTLISTED` en experimento.
+2. Congelar predicciones, capital, cantidad, duración, éxito y stop conditions.
+3. Aprobar manualmente.
+4. Registrar observaciones y costos reales.
+5. Comparar predicción/resultado.
+6. Validar, rechazar o volver a investigar/modificar.
 
-Columnas mínimas:
+## 8. Experiencia MVP-A
+
+El shell A+B actual es Foundation DEMO. El dashboard funcional futuro mostrará:
 
 ```text
-Product
-Opportunity Type
-Market Price
-Cost
-Contribution Margin
-Demand
-Competition
-Risk
-Confidence
-Opportunity Score
-Status
-Updated At
+Opportunity / Subject
+Strategy
+Asking Median / Sold Evidence
+Quick / Target / Premium availability
+Maximum Buy availability
+Contribution / ROI
+Liquidity
+Risk / Confidence / Coverage
+Gates
+Status / Updated At
 ```
 
-La experiencia combina dos niveles:
+El shell no debe llamar «Market Value» a una mediana `ASKING` ni mostrar cero por ausencia.
 
-- vista A operativa para listado, filtros, estado y revisión rápida;
-- vista B analítica para detalle de precios, evidencia, faltantes, score y explicación.
-
-## 8. Requisitos no funcionales
+## 9. Requisitos no funcionales
 
 | ID | Requisito |
 |---|---|
-| RNF-001 | Trazabilidad: todo valor derivado debe poder rastrearse a observaciones y versión de cálculo. |
-| RNF-002 | Reproducibilidad: recalcular con los mismos datos y parámetros produce el mismo resultado. |
-| RNF-003 | Modularidad: conectores de fuentes no deben contener reglas de scoring. |
-| RNF-004 | Idempotencia: repetir una captura con la misma identidad no debe duplicar observaciones. |
-| RNF-005 | Auditabilidad: cambios de estado, supuestos y ajustes manuales deben quedar registrados. |
-| RNF-006 | Resiliencia: el fallo de una fuente no invalida datos ya almacenados ni oculta cobertura incompleta. |
-| RNF-007 | Seguridad: secretos y credenciales no se almacenan en documentación ni datos versionados. |
-| RNF-008 | Cumplimiento: cada conector debe respetar términos, límites y restricciones de la fuente. |
-| RNF-009 | Portabilidad: el modelo de dominio no dependerá del formato particular de un marketplace. |
-| RNF-010 | Observabilidad: cada ejecución debe informar fuente, duración, registros procesados y errores. |
-| RNF-011 | Aislamiento: una persona no puede acceder a entidades de un workspace sin membresía válida. |
+| RNF-001 | Trazabilidad de todo derivado a observaciones y versión. |
+| RNF-002 | Reproducibilidad con mismos inputs/parámetros. |
+| RNF-003 | Conectores separados de dominio y scoring. |
+| RNF-004 | Idempotencia de capturas/cargas. |
+| RNF-005 | Auditoría de decisiones, estados y ajustes. |
+| RNF-006 | Degradación visible ante fuentes o inputs incompletos. |
+| RNF-007 | Secretos fuera del repositorio. |
+| RNF-008 | Métodos de acceso y retención permitidos por fuente. |
+| RNF-009 | Dominio independiente de marketplace. |
+| RNF-010 | Observabilidad de ejecuciones. |
+| RNF-011 | Aislamiento por workspace antes de datos reales multiusuario. |
 
-Los objetivos cuantitativos de rendimiento se definirán después de elegir las primeras fuentes y el stack mediante ADR.
+## 10. Criterios de aceptación
 
-## 9. Criterios de aceptación del MVP
+### MVP-A1
 
-El incremento se acepta cuando:
+- F-01 funciona con fixture DEMO y una carga manual trazable;
+- cohortes separan condición, moneda, variante y `ASKING/SOLD`;
+- estadística no se presenta como valor realizable sin soporte;
+- `unknown` se representa sin cero implícito;
+- tests cubren selección, histórico, fecha de corte y exclusiones.
 
-- un usuario puede completar F-01 con datos de ejemplo y con al menos una fuente real autorizada;
-- se calculan estadísticas robustas y economía unitaria con pruebas automatizadas;
-- el score muestra componentes, pesos, cobertura y versión;
-- una oportunidad puede recorrer el ciclo hasta `TESTING` y registrar resultados;
-- existe un conjunto de datos de ejemplo reproducible;
-- cada RF P0 implementado está probado y documentado;
-- una demostración compara el resultado con una investigación manual básica;
-- no se presentan estimaciones como hechos cuando la señal no es observable.
+### MVP-A2
 
-## 10. Dependencias y decisiones pendientes
+- F-02 produce los tres contratos separados;
+- cada salida calculada expone evidencia, supuestos y versión;
+- inputs insuficientes producen gates, no valores inventados;
+- recomendación muestra riesgo, confianza y cobertura;
+- ningún output se presenta como calibrado sin evidencia.
 
-- primeras fuentes con acceso permitido;
-- umbrales de frescura por tipo de señal;
-- pesos iniciales de scoring calibrados mediante revisión experta.
+### MVP-A3
 
-Mercado, stack, interfaz y estrategia de autenticación fueron resueltos mediante [[ADR-002]], [[ADR-004]] y [[ADR-005]]. La primera fuente real autorizada continúa pendiente; la carga manual trazable de [[ADR-003]] permite avanzar sin asumir autorización de automatización.
+- F-03 congela predicción y criterios antes de aprobar;
+- registra resultados append-only;
+- distingue validado, rechazado e inconcluso;
+- compara el flujo con el benchmark manual;
+- mantiene aprobación humana para capital.
 
-Estas decisiones deben resolverse como ADR antes de afectar implementación irreversible.
+## 11. Dependencias pendientes
 
-## 11. Referencias
+- primera fuente real con método permitido;
+- caso real para B1;
+- umbrales de frescura;
+- política inicial de contribución y reservas para Maximum Buy;
+- evidencia de velocidad/liquidez;
+- límites de capital para experimento real.
 
-- [[PRODUCT_VISION]]
+## 12. Fuera de alcance
+
+Ver [[PRODUCT_VISION]] y [[ROADMAP]]. El código MVP-A sólo implementa el perfil `RESALE + PRODUCT/listings` de forma incremental.
+
+## 13. Referencias
+
+- [[ADR-006]]
+- [[ADR-007]]
+- [[ADR-008]]
+- [[OPPORTUNITY_MODEL]]
+- [[PRICING_MODEL]]
 - [[SYSTEM_ARCHITECTURE]]
 - [[DATA_MODEL]]
 - [[SCORING_MODEL]]

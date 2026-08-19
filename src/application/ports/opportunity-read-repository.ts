@@ -1,22 +1,38 @@
-import type { CanonicalDataset } from "@/contracts/canonical-dataset.schema";
-import type { MarketStatistics } from "@/domain/market-statistics";
+import type { ComparableExclusion } from "@/domain/comparable-cohort";
+import type { MarketPriceEstimate } from "@/domain/market-price-estimate";
+import type { OpportunityStatus } from "@/domain/opportunity-state";
 
 export type OpportunityListItem = {
   id: string;
   productName: string;
   type: "RESALE";
-  status: "RESEARCHING";
-  medianMarketPrice: number;
+  status: OpportunityStatus;
+  medianAskingPrice: number | null;
   sampleSize: number;
+  marketEvidenceStatus: MarketPriceEstimate["status"];
   scoreStatus: "UNCALIBRATED";
 };
 
 export type OpportunityDetail = OpportunityListItem & {
   hypothesis: string;
-  statistics: MarketStatistics;
-  sources: string[];
-  excludedObservations: number;
-  dataset: CanonicalDataset;
+  marketPriceEstimate: MarketPriceEstimate;
+  evidenceSources: Array<{
+    id: string;
+    name: string;
+    method: "MANUAL_USER_ENTRY";
+    status: "PENDING_TERMS_REVIEW";
+  }>;
+  evidenceObservations: Array<{
+    observationId: string;
+    listingId: string;
+    title: string;
+    sourceName: string;
+    method: "MANUAL_USER_ENTRY";
+    observedAt: string;
+    amount: number;
+  }>;
+  exclusions: ComparableExclusion[];
+  historicalSnapshotCount: number;
 };
 
 export interface OpportunityReadRepository {

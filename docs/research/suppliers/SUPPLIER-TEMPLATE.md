@@ -18,6 +18,8 @@ updated: YYYY-MM-DD
 
 ## Shipping, impuestos y landed cost
 
+## Opportunity / Supply Route relacionada
+
 ## Confiabilidad y evidencia
 
 ## Riesgos

@@ -5,6 +5,7 @@ describe("opportunity state transitions", () => {
   it("permite el flujo controlado", () => {
     expect(canTransition("DISCOVERED", "RESEARCHING")).toBe(true);
     expect(canTransition("RESEARCHING", "SHORTLISTED")).toBe(true);
+    expect(canTransition("TESTING", "RESEARCHING")).toBe(true);
   });
 
   it("impide saltos no autorizados", () => {

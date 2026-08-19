@@ -3,14 +3,14 @@ type: sprint
 id: SPRINT-000
 status: in_progress
 created: 2026-08-12
-updated: 2026-08-18
+updated: 2026-08-19
 ---
 
 # Sprint 0 — Project Foundation
 
 ## Goal
 
-Preparar una base documental y técnica coherente, reproducible y suficientemente decidida para comenzar el desarrollo iterativo del primer flujo de Market Price Intelligence.
+Preparar una base documental y técnica coherente para comenzar MVP-A Resale Decision sin perder el ciclo completo de Opportunity.
 
 ## Alcance seleccionado
 
@@ -21,6 +21,7 @@ Preparar una base documental y técnica coherente, reproducible y suficientement
 - [x] FND-003 — Registrar decisiones iniciales.
 - [x] FND-004 — Definir arquitectura lógica y modelo de datos.
 - [x] FND-005 — Definir scoring v0.1.0.
+- [x] FND-013 — Reconciliar síntesis históricas, modelo Opportunity y secuencia MVP-A.
 
 ### Decisiones del primer incremento
 
@@ -34,6 +35,13 @@ Preparar una base documental y técnica coherente, reproducible y suficientement
 - [x] FND-010 — Crear fixture y perfil canónico parcial para Foundation.
 - [x] FND-011 — Configurar formato, pruebas y validación documental.
 - [x] FND-012 — Congelar protocolo de benchmark manual.
+
+### MVP-A1 iniciado durante el bloqueo externo
+
+- [x] MI-002 — Construir cohorte comparable explicada.
+- [x] MI-003 — Calcular estadística robusta y suficiencia.
+- [ ] MI-006 — Persistir históricamente `MarketPriceEstimate`. `IN_PROGRESS`
+- [ ] DA-002 / MI-001 — Importación manual append-only e idempotente.
 
 ## Entregables
 
@@ -50,7 +58,7 @@ Preparar una base documental y técnica coherente, reproducible y suficientement
 ## Criterios de salida
 
 - [x] Todos los enlaces internos críticos resuelven.
-- [ ] No hay contradicciones críticas entre PRD, arquitectura, datos y scoring.
+- [x] No hay contradicciones críticas entre PRD, arquitectura, datos y scoring.
 - [ ] Mercado, fuente y stack iniciales tienen ADR aceptado.
 - [x] El proyecto se instala/ejecuta con instrucciones reproducibles.
 - [x] Los tests básicos y validadores pasan desde un entorno limpio.
@@ -69,6 +77,9 @@ Preparar una base documental y técnica coherente, reproducible y suficientement
 - La ejecución local usa un adaptador DEMO sin red hasta integrar Supabase.
 - El dashboard combina el listado operativo A con el detalle analítico B.
 - `workspace_id` forma parte de los contratos desde Foundation para evitar una migración transversal posterior.
+- El schema `0.1.0` es un perfil Foundation `RESALE + PRODUCT`, no el modelo objetivo completo.
+- Market evidence, Commercial Pricing y Maximum Buy son contratos separados.
+- Autenticación real/RLS se difieren; `workspace_id` permanece según [[ADR-008]].
 
 ## Results
 
@@ -78,6 +89,14 @@ Se creó una aplicación Next.js ejecutable con dashboard A, detalle B, puerto d
 
 La validación `pnpm check` pasó el 2026-08-18: formato, ESLint, TypeScript, 13 pruebas, 48 archivos Markdown/8 IDs y build Next.js. La navegación `/` → detalle se verificó en navegador local sin errores de consola.
 
+Se investigaron las fuentes candidatas de Chile: Mercado Libre ofrece API oficial, pero la finalidad de inteligencia comercial requiere confirmación contractual escrita; Facebook Marketplace exige permiso escrito expreso para cualquier recolección automatizada. No se habilitó ningún scraper ni conector y [[ADR-003]] se mantiene vigente.
+
+El 2026-08-19 se revisaron tres síntesis históricas del origen de COIE. La reconciliación confirmó el núcleo `DISCOVER → EVALUATE → TEST → MEASURE → SCALE/REJECT/MODIFY` y detectó brechas en Opportunity, Commercial Pricing, Maximum Buy, Seasonality y secuenciación. FND-013 integra [[ADR-006]], [[ADR-007]] y [[ADR-008]] sin modificar el maestro histórico.
+
+La validación `pnpm check` del 2026-08-19 pasó: formato, ESLint, TypeScript, 22 pruebas, 57 archivos Markdown/11 IDs y build Next.js. El shell usa ahora `medianAskingPrice`, muestra la ausencia sin cero y mantiene Quick/Target/Premium, Maximum Buy y liquidez como no calculados.
+
+MVP-A1 comenzó sin cerrar FND-007. La cohorte `comparable-cohort-v0.1.0` elige el último snapshot anterior al corte antes de aplicar condición, tipo de precio, moneda y calidad, evitando reactivar evidencia antigua. `MarketPriceEstimate v0.1.0` expone suficiencia, estimación central nullable, cuartiles/IQR, inputs, cobertura descriptiva y exclusiones; permanece `DEMO` y no constituye Market Value, precio realizable ni recomendación. MI-002 y MI-003 quedan completados; MI-006 sigue en progreso hasta persistir su histórico.
+
 ## Problems / Risks
 
 - Mercado Libre Chile y Facebook Marketplace son fuentes candidatas, pero falta comprobar un mecanismo autorizado, términos, campos y retención.
@@ -85,6 +104,7 @@ La validación `pnpm check` pasó el 2026-08-18: formato, ESLint, TypeScript, 13
 - Falta un repuesto/variante NK150 real para ejecutar el benchmark B1.
 - El benchmark B0 está `PARTIAL`; faltan moneda alternativa, gates y economía desconocida antes de aprobar su matriz completa.
 - Los pesos de scoring son una hipótesis sin calibración real.
+- El fixture actual permite estadísticas `ASKING`, pero no Quick Sale, Maximum Buy, liquidez ni economía responsable.
 - Sprint 0 no puede cerrarse mientras FND-007 y las puertas asociadas a una fuente real permitida sigan pendientes.
 
 ## Decisions
@@ -94,13 +114,17 @@ La validación `pnpm check` pasó el 2026-08-18: formato, ESLint, TypeScript, 13
 - [[ADR-003]] — La adquisición inicial es carga manual trazable.
 - [[ADR-004]] — Next.js, TypeScript, Supabase/PostgreSQL y dashboard A+B.
 - [[ADR-005]] — Autenticación y aislamiento mediante workspaces.
+- [[ADR-006]] — Opportunity como agregado central y perfil MVP-A Resale.
+- [[ADR-007]] — Evidencia de mercado, pricing y máximo de compra separados.
+- [[ADR-008]] — Platform Access diferido del primer ciclo comercial.
 
 ## Next Actions
 
 1. Comprobar una fuente real permitida para cerrar FND-007.
-2. Refinar US-001, US-002, US-003 y US-009 para el Sprint 1.
-3. Seleccionar el caso real y ejecutar B1 cuando exista evidencia permitida.
-4. Crear el proyecto Supabase y ejecutar la migración de autenticación/workspaces en el sprint que corresponda.
+2. Refinar DA-002, MI-001 y MI-006 para dejar MVP-A1 en Definition of Ready.
+3. Persistir importación manual y ejecuciones `MarketPriceEstimate` sin reinterpretar el schema Foundation `0.1.0`.
+4. Seleccionar el caso real y ejecutar B1 cuando exista evidencia permitida.
+5. Activar Platform Access antes de datos reales multiusuario, no antes del primer ciclo DEMO/manual.
 
 ## Review
 

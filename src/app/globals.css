@@ -597,6 +597,85 @@ tbody tr:hover {
   line-height: 1.7;
 }
 
+.empty-evidence {
+  display: grid;
+  min-height: 110px;
+  place-items: center;
+  margin-top: 18px;
+  border: 1px dashed var(--line);
+  border-radius: 10px;
+  color: var(--muted);
+  background: #fafbfc;
+  font-size: 13px;
+}
+
+.evidence-table-wrap {
+  overflow-x: auto;
+  margin-top: 18px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+}
+
+.evidence-table {
+  min-width: 680px;
+}
+
+.evidence-table th,
+.evidence-table td {
+  padding: 12px 14px;
+  font-size: 12px;
+}
+
+.evidence-secondary-grid {
+  margin-top: 20px;
+}
+
+.exclusion-list {
+  max-height: 360px;
+  overflow-y: auto;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.exclusion-list li {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 12px 0;
+  border-top: 1px solid var(--line);
+  font-size: 12px;
+}
+
+.exclusion-list li:first-child {
+  border-top: 0;
+}
+
+.exclusion-list div {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.exclusion-list span,
+.exclusion-list em,
+.confidence-note {
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.exclusion-list em {
+  max-width: 45%;
+  font-style: normal;
+  text-align: right;
+}
+
+.confidence-note {
+  margin: 16px 0 0;
+  line-height: 1.6;
+}
+
 @media (max-width: 1050px) {
   .kpi-grid {
     grid-template-columns: repeat(2, 1fr);

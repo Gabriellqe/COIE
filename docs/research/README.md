@@ -8,6 +8,7 @@ La investigación debe producir evidencia reutilizable y fechada, no sólo una c
 - `niches/` — problema, demanda, competencia y profundidad de SKU.
 - `products/` — identidad, comparables, economía y riesgos.
 - `suppliers/` — ofertas, MOQ, lead time y confiabilidad.
+- `conversations/` — síntesis conceptuales proporcionadas por el propietario y reconciliaciones; no son evidencia comercial externa.
 
 ## Requisitos de una nota
 

@@ -10,6 +10,7 @@ const clp = new Intl.NumberFormat("es-CL", {
 
 export default async function DashboardPage() {
   const opportunities = await listOpportunities(demoOpportunityRepository);
+  const medianAskingPrice = opportunities.at(0)?.medianAskingPrice;
 
   return (
     <main className="app-shell">
@@ -69,11 +70,11 @@ export default async function DashboardPage() {
             <small>fixture activo</small>
           </article>
           <article className="kpi-card">
-            <span className="kpi-label">Precio mediano</span>
+            <span className="kpi-label">Mediana ASKING</span>
             <strong>
-              {clp.format(opportunities[0]?.medianMarketPrice ?? 0)}
+              {medianAskingPrice == null ? "—" : clp.format(medianAskingPrice)}
             </strong>
-            <small>usado · precio pedido</small>
+            <small>usado · precio pedido · no es valor realizable</small>
           </article>
           <article className="kpi-card caution">
             <span className="kpi-label">Score</span>
@@ -102,7 +103,7 @@ export default async function DashboardPage() {
                 <tr>
                   <th>Producto</th>
                   <th>Tipo</th>
-                  <th>Precio mercado</th>
+                  <th>Mediana de precios pedidos</th>
                   <th>Muestra</th>
                   <th>Score</th>
                   <th>Estado</th>
@@ -119,7 +120,17 @@ export default async function DashboardPage() {
                       </small>
                     </td>
                     <td>{opportunity.type}</td>
-                    <td>{clp.format(opportunity.medianMarketPrice)}</td>
+                    <td>
+                      {opportunity.medianAskingPrice === null
+                        ? "—"
+                        : clp.format(opportunity.medianAskingPrice)}
+                      {opportunity.marketEvidenceStatus ===
+                        "INSUFFICIENT_DATA" && (
+                        <small className="table-subtitle">
+                          Datos insuficientes
+                        </small>
+                      )}
+                    </td>
                     <td>{opportunity.sampleSize} comparables</td>
                     <td>
                       <span className="status neutral">No calibrado</span>

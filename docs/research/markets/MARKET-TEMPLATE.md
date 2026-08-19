@@ -24,6 +24,8 @@ review_after:
 
 ## Señales de demanda y oferta
 
+## Liquidez, canales y evidencia temporal
+
 ## Hechos
 
 ## Inferencias
