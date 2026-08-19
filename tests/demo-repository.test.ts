@@ -8,7 +8,7 @@ describe("DemoOpportunityRepository", () => {
     const detail = await repository.getById("opportunity-demo-001");
 
     expect(list).toHaveLength(1);
-    expect(list[0].medianMarketPrice).toBe(50000);
+    expect(list[0].medianAskingPrice).toBe(50000);
     expect(detail?.sources).toEqual([
       "Mercado Libre Chile",
       "Facebook Marketplace",

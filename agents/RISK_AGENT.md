@@ -13,4 +13,6 @@ status: planned
 **Gate:** un riesgo crítico no resuelto bloquea recomendación aunque el score bruto sea alto.  
 **Eval:** recall de riesgos críticos, falsos positivos y utilidad de mitigaciones.
 
+Estacionalidad como riesgo no sustituye un [[SEASONALITY]] temporal con evidencia suficiente.
+
 Contrato común: [[AGENT_ARCHITECTURE]].

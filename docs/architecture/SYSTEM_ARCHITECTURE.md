@@ -1,8 +1,8 @@
 ---
 type: architecture
 status: proposed
-version: 0.2
-updated: 2026-08-18
+version: 0.3
+updated: 2026-08-19
 ---
 
 # Arquitectura del sistema
@@ -16,6 +16,7 @@ Este documento describe una arquitectura lógica independiente del stack. La sel
 ## 2. Principios arquitectónicos
 
 - **Dominio primero:** productos, observaciones, oportunidades y experimentos no dependen de un marketplace específico.
+- **Opportunity al centro:** estrategias y capacidades enriquecen un mismo agregado y ciclo de decisión.
 - **Procedencia obligatoria:** todo dato externo conserva fuente, instante de captura y método.
 - **Histórico inmutable:** una nueva captura agrega observaciones; no reescribe el pasado.
 - **Cálculos reproducibles:** derivados y scores registran versión, parámetros y observaciones utilizadas.
@@ -52,7 +53,8 @@ Application
   Use Cases · Workflow · State Transitions · Authorization
 
 Domain Intelligence
-  Product · Market · Economics · Compatibility · Risk · Scoring
+  Opportunity · Product · Market Price · Commercial Pricing
+  Economics · Compatibility · Risk · Scoring
 
 Data Acquisition
   Connectors · Raw Capture · Mapping · Validation · Deduplication
@@ -75,21 +77,27 @@ Una capa sólo utiliza contratos de la capa inferior o puertos explícitos. Un c
 - **Experiment Workspace:** hipótesis, límites, métricas y comparación predicción/resultado.
 - **Data Quality View:** datos faltantes, antigüedad, conflictos y fallos de fuentes.
 
+Una salida no calculada se muestra como desconocida junto con su motivo. El shell Foundation no presenta una mediana `ASKING` como valor realizable ni reemplaza ausencias por cero.
+
 La primera interfaz es web. Durante Foundation consume un repositorio DEMO mediante los mismos puertos que utilizará la persistencia real.
 
 ### 5.2 Identity & Access
 
-- Supabase Auth será el proveedor de identidad del MVP.
+- Supabase Auth será el proveedor de identidad cuando se active Platform Access.
 - `Workspace` define el límite de propiedad y colaboración.
 - `WorkspaceMember` concede acceso explícito.
 - Las entidades comerciales incluyen `workspace_id`.
 - PostgreSQL Row Level Security aplicará el aislamiento cuando se integre Supabase.
-- Foundation modela el contrato, pero no simula una autenticación real sin proyecto ni credenciales.
+- Foundation/MVP-A modelan el contrato, pero difieren autenticación real y RLS según [[ADR-008]].
 
 ### 5.3 Application Services
 
-- `AnalyzeProduct`: coordina identidad, observaciones, economía y scoring.
+- `AnalyzeOpportunity`: coordina el ciclo y las capacidades aplicables a strategy/subject.
+- `AnalyzeProduct`: adaptador del perfil MVP-A `RESALE + PRODUCT`.
 - `RefreshMarketEvidence`: actualiza señales sin borrar el histórico.
+- `EstimateMarketPrice`: crea evidencia de mercado por cohorte y versión.
+- `RecommendPricing`: propone escenarios comerciales cuando hay soporte.
+- `CalculateMaximumBuyPrice`: calcula o bloquea el umbral de compra.
 - `EvaluateOpportunity`: ejecuta reglas, gates y score versionado.
 - `TransitionOpportunity`: aplica la máquina de estados y registra auditoría.
 - `CreateExperiment`: congela hipótesis, predicciones y criterios iniciales.
@@ -98,10 +106,14 @@ La primera interfaz es web. Durante Foundation consume un repositorio DEMO media
 
 ### 5.4 Domain Intelligence
 
+- **Opportunity:** strategy, subject, hipótesis, ciclo y decisiones.
 - **Product Intelligence:** identidad, atributos, variantes y normalización.
-- **Market Intelligence:** comparables, estadísticas, demanda y competencia.
+- **Market/Price Intelligence:** comparables, estadísticas, demanda y competencia.
+- **Commercial Pricing:** escenarios `QUICK`, `TARGET` y `PREMIUM`.
 - **Sourcing Intelligence:** proveedores, MOQ, lead time y landed cost.
 - **Compatibility Intelligence:** relación producto–modelo y cobertura.
+- **Product Relations:** accesorios, consumibles, reemplazos, alternativas y complementos futuros.
+- **Seasonality Intelligence:** perfiles temporales futuros con suficiencia explícita.
 - **Economics:** precio neto, costos, margen, ROI y capital efficiency.
 - **Risk:** señales regulatorias, falsificación, devolución, dependencia y obsolescencia.
 - **Scoring:** normalización, agregación, confianza, gates y explicación.
@@ -144,16 +156,16 @@ El diseño lógico está en [[DATA_MODEL]].
 
 ```mermaid
 flowchart TD
-    D["Entrada o descubrimiento"] --> N["Normalizar producto"]
-    N --> M["Capturar evidencia de mercado"]
-    M --> S["Capturar abastecimiento"]
-    S --> E["Calcular economía"]
-    E --> Q["Evaluar calidad y cobertura"]
+    D["Descubrir o recibir Opportunity"] --> N["Resolver strategy y subject"]
+    N --> M["Capturar evidencia aplicable"]
+    M --> P["Estimar mercado y pricing"]
+    P --> E["Calcular economía / límite de compra"]
+    E --> Q["Evaluar calidad, riesgo y cobertura"]
     Q --> C["Calcular scores"]
     C --> R["Explicar y recomendar"]
     R --> H{"Decisión humana"}
     H -->|Probar| X["Experimento"]
-    H -->|Investigar| M
+    H -->|Investigar o modificar| M
     H -->|Descartar| J["Rechazo con motivo"]
     X --> A["Resultados reales"]
     A --> L["Comparar predicción"]
@@ -211,16 +223,18 @@ Por ejecución se registran:
 - frescura y cobertura resultantes;
 - versión de normalizadores y score.
 
-## 12. Evolución por fases
+## 12. Evolución por incrementos
 
-1. **Foundation:** documentación, contratos, datos de ejemplo y ADR.
-2. **Market Price Intelligence:** producto, listing, precio e histórico.
-3. **Resale:** economía, riesgo y ranking `RESALE`.
-4. **Replenishment:** ecosistemas, compatibilidad y recurrencia.
-5. **Sourcing:** ofertas, landed cost y riesgos de proveedor.
-6. **Experiments:** predicción, ejecución y resultado.
-7. **Learning:** calibración basada en resultados suficientes.
-8. **Autonomous Discovery:** agentes supervisados proponiendo hipótesis.
+1. **Foundation / reconciliación:** contratos, DEMO y ADR.
+2. **MVP-A1 Market Evidence:** producto, listing, histórico y `MarketPriceEstimate`.
+3. **MVP-A2 Resale Decision:** pricing, máximo de compra, Economics Core, riesgo y recomendación.
+4. **MVP-A3 Experimentation Lite:** prueba, medición y decisión.
+5. **MVP-B Sourcing + Economics:** proveedores, rutas, MOQ y landed cost ampliado.
+6. **MVP-C Replenishment:** ecosistemas, compatibilidad y relaciones de producto.
+7. **MVP-D Niche/Catalog/Bundles:** nuevos sujetos de oportunidad.
+8. **Seasonality:** sólo con histórico suficiente.
+9. **Learning:** calibración basada en cohortes reales.
+10. **Autonomous Discovery:** agentes supervisados proponiendo hipótesis.
 
 ## 13. Decisiones abiertas
 
@@ -228,6 +242,8 @@ Por ejecución se registran:
 - almacenamiento de capturas crudas según cada fuente;
 - primer conector real y su mecanismo autorizado;
 - reglas cuantitativas de frescura y calibración.
+- diseño físico de subjects no-producto y ProductRelationship;
+- umbrales de evidencia para Quick Sale, liquidez y Seasonality.
 
 No se introduce infraestructura distribuida antes de que exista una necesidad medible.
 
@@ -241,4 +257,7 @@ No se introduce infraestructura distribuida antes de que exista una necesidad me
 - [[ADR-003]]
 - [[ADR-004]]
 - [[ADR-005]]
+- [[ADR-006]]
+- [[ADR-007]]
+- [[ADR-008]]
 - [[ADR-001]]

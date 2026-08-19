@@ -1,169 +1,150 @@
 ---
 type: user-story-index
 status: active
-updated: 2026-08-18
+updated: 2026-08-19
 ---
 
-# Historias de usuario iniciales
+# Historias de usuario
 
-## US-001 — Estimar valor de mercado
+## MVP-A1 — Market Evidence
 
-Como operador comercial, quiero introducir un producto o URL para obtener una estimación trazable de su valor de mercado y decidir si merece investigación.
+### US-001 — Estimar evidencia de precio
 
-### Aceptación
+Como operador, quiero introducir un producto o URL para obtener estadísticas trazables de comparables y saber qué evidencia existe antes de decidir.
 
-- acepta nombre o URL;
-- utiliza múltiples referencias comparables;
-- informa media, mediana, rango, dispersión y número de observaciones;
-- separa condición y precio pedido/vendido;
-- muestra fuentes, fechas, exclusiones y calidad de muestra.
+**Aceptación:**
 
-## US-002 — Conservar histórico de precios
+- acepta nombre, URL o carga estructurada;
+- informa cohorte, muestra, media, mediana, rango y dispersión;
+- separa condición, variante, moneda y `ASKING/SOLD`;
+- muestra fuentes, fechas, exclusiones, suficiencia, confianza y cobertura;
+- no llama Market Value a una mediana `ASKING` sin soporte.
 
-Como analista, quiero conservar observaciones sucesivas para comprender cambios y no depender de una fotografía actual.
+### US-002 — Conservar histórico
 
-### Aceptación
+Como analista, quiero conservar observaciones sucesivas para entender cambios sin sobrescribir el pasado.
 
-- una captura no sobrescribe otra;
-- cada observación tiene fuente y fecha;
-- duplicados idempotentes no inflan la muestra;
-- correcciones conservan auditoría.
+**Aceptación:** fuente/método/fecha obligatorios, idempotencia, correcciones auditables y último valor por listing sin perder snapshots.
 
-## US-003 — Normalizar productos
+### US-003 — Normalizar productos
 
-Como analista, quiero vincular publicaciones equivalentes a un producto/variante canónicos para comparar elementos realmente compatibles.
+Como analista, quiero vincular referencias equivalentes a un producto/variante canónicos.
 
-### Aceptación
+**Aceptación:** conserva original, confianza y revisión; no fusiona ambigüedades críticas; una fusión es reversible/auditable.
 
-- conserva título y atributos originales;
-- registra confianza de coincidencia;
-- no fusiona automáticamente ambigüedades críticas;
-- permite revertir una fusión conservando relaciones.
+## MVP-A2 — Resale Decision
 
-## US-004 — Calcular economía unitaria
+### US-010 — Evaluar una oportunidad Resale
 
-Como operador, quiero ver landed cost, contribución, margen y ROI para evitar decisiones basadas sólo en diferencia de precios.
+Como operador, quiero evaluar una publicación concreta para decidir investigar, descartar, negociar externamente o probar.
 
-### Aceptación
+**Aceptación:** identifica strategy/subject efectivo, precio/condición de compra, evidencia comparable, economía, liquidez/proxy, riesgo, confianza, cobertura, gates y siguiente acción.
 
-- incluye todos los componentes de costo disponibles;
-- datos faltantes no se convierten en cero;
-- moneda, cantidad, fuente y supuestos son visibles;
-- escenario base y adverso son reproducibles.
+### US-011 — Recomendar escenarios de venta
 
-## US-005 — Estimar demanda y competencia
+Como operador, quiero distinguir Quick, Target y Premium para elegir un objetivo de venta sin confundirlo con precios observados.
 
-Como operador, quiero distinguir demanda, oferta y competencia para evaluar liquidez y saturación.
+**Aceptación:** cada escenario expone canal, evidencia, supuestos, calibración y velocidad opcional; falta de soporte produce `unknown` con motivo; no publica automáticamente.
 
-### Aceptación
+### US-012 — Calcular precio máximo de compra
 
-- muestra métricas/proxies subyacentes;
-- identifica ventana y cobertura;
-- no presenta proxies como ventas exactas;
-- señala conflictos y antigüedad.
+Como operador, quiero conocer cuánto puedo pagar como máximo para cumplir contribución y reservas definidas.
 
-## US-006 — Comparar oportunidades
+**Aceptación:** usa escenario, costos, contribución mínima, riesgo y capital/tiempo; inputs críticos desconocidos activan gate; conserva versión y supuestos.
 
-Como operador, quiero un tablero ordenable para priorizar dónde investigar o probar.
+### US-013 — Estimar liquidez
 
-### Aceptación
+Como operador, quiero conocer la velocidad/liquidez esperada y la calidad de su evidencia.
 
-- muestra columnas definidas en [[PRD]];
-- filtra por tipo, estado, score, riesgo y vigencia;
-- el detalle explica el ranking;
-- oportunidades con gates se distinguen visualmente.
+**Aceptación:** distingue dato observado y proxy; declara ventana/método/confianza; publicaciones activas solas no se presentan como ventas ni velocidad.
 
-## US-007 — Recibir recomendación explicable
+### US-004 — Calcular economía unitaria
 
-Como responsable de capital, quiero entender por qué una oportunidad fue recomendada para revisar la evidencia antes de actuar.
+Como operador, quiero ver costos, contribución, margen y ROI con escenarios reproducibles.
 
-### Aceptación
+**Aceptación:** costos desconocidos no son cero; moneda/cantidad/supuestos visibles; escenario base/adverso; diferencia entre costo real, hipotético y máximo de compra.
 
-- muestra score, riesgo, confianza, cobertura y versión;
-- enumera factores positivos/negativos y datos faltantes;
-- presenta gates y sensibilidad;
-- nunca ejecuta la compra automáticamente.
+### US-005 — Estimar demanda y competencia
 
-## US-008 — Gestionar estados
+Como analista, quiero distinguir demanda, oferta y competencia mediante señales disponibles.
 
-Como operador, quiero mover una oportunidad por un ciclo controlado para mantener trazabilidad de decisiones.
+**Aceptación:** proxies etiquetados, ventana/cobertura, conflictos y antigüedad visibles.
 
-### Aceptación
+### US-007 — Recibir recomendación explicable
 
-- sólo permite transiciones válidas;
-- actor, fecha y motivo quedan registrados;
-- rechazo exige motivo;
-- reabrir exige nueva evidencia.
+Como responsable de capital, quiero entender una recomendación antes de actuar.
 
-## US-009 — Acceder a un espacio de trabajo aislado
+**Aceptación:** score, riesgo, confianza, cobertura y versión separados; factores, faltantes, gates y sensibilidad; aprobación humana obligatoria.
 
-Como integrante del equipo, quiero iniciar sesión y trabajar dentro de un espacio autorizado para que mis datos no sean visibles a personas ajenas.
+### US-008 — Gestionar estados
 
-### Aceptación
+Como operador, quiero un ciclo auditable de oportunidad.
 
-- permite iniciar y cerrar sesión con correo y contraseña;
-- cada usuario recibe un workspace personal predeterminado;
-- todas las entidades comerciales se consultan dentro del workspace activo;
-- un usuario no puede leer ni modificar datos de un workspace sin membresía;
-- un workspace compartido sólo permite acceso a miembros registrados;
-- las pruebas cubren intento de acceso cruzado;
-- no se almacenan contraseñas en tablas de dominio ni en el repositorio.
+**Aceptación:** transiciones válidas, actor/fecha/motivo, rechazo con causa e inconcluso/modificación regresando a `RESEARCHING`.
 
-## US-020 — Estimar reposición
+## MVP-A3 — Experimentation Lite
 
-Como operador, quiero conocer la frecuencia estimada de reposición de un producto para evaluar ventas recurrentes.
+### US-030 — Crear experimento Lite
 
-### Aceptación
+Como operador, quiero probar una oportunidad preseleccionada con capital y pérdidas limitadas.
 
-- identifica producto base/ecosistema;
-- registra intervalo, causa y evidencia de reposición;
-- diferencia estimación de dato observado;
-- muestra `ReplenishmentScore` y confianza.
+**Aceptación:** hipótesis, cantidad, canal, duración, predicciones, criterios, stop conditions y aprobación congelados antes de iniciar.
 
-## US-021 — Validar compatibilidad
+### US-031 — Comparar predicción y resultado
 
-Como analista, quiero relacionar un repuesto con modelos compatibles para estimar cobertura sin provocar devoluciones.
+Como analista, quiero comparar demanda, margen y velocidad predichas con las reales.
 
-### Aceptación
+**Aceptación:** predicción/resultado separados, error versionado, observaciones append-only y resultado `VALIDATED/REJECTED/INCONCLUSIVE`.
 
-- cada relación tiene fuente y estado;
-- separa `CLAIMED`, `VERIFIED`, `CONFLICTED` y `REJECTED`;
-- conflictos reducen score/confianza;
-- permite consultar cobertura por marca y modelo.
+## Experiencia y soporte
 
-## US-030 — Crear experimento
+### US-006 — Comparar oportunidades
 
-Como operador, quiero convertir una oportunidad preseleccionada en una prueba limitada para validar demanda y economía reales.
+Como operador, quiero un dashboard funcional para priorizar oportunidades.
 
-### Aceptación
+**Aceptación:** diferencia shell DEMO de producto completo; muestra disponibilidad de outputs, filtros, gates y detalle explicable.
 
-- exige hipótesis, cantidad, capital, duración, predicciones y criterios;
-- exige stop conditions y aprobación humana;
-- congela la versión inicial;
-- impide iniciar con gates bloqueantes.
+### US-009 — Acceder a workspace aislado
 
-## US-031 — Comparar predicción y resultado
+Como integrante, quiero autenticación y aislamiento antes de trabajar con datos reales multiusuario.
 
-Como analista, quiero comparar demanda, margen y velocidad predichas con las reales para mejorar decisiones futuras.
+**Aceptación:** Supabase Auth, workspace/membresía, RLS, pruebas negativas de acceso cruzado y sin contraseñas de dominio. Planificada según [[ADR-008]].
 
-### Aceptación
+## Incrementos futuros
 
-- conserva predicción y resultado por separado;
-- calcula error con método versionado;
-- distingue `validated`, `rejected` e `inconclusive`;
-- permite agregar resultados por cohorte sin cambiar históricos.
+### US-020 — Estimar reposición
+
+Como operador, quiero conocer ciclo de reemplazo y recompra potencial de un producto.
+
+**Aceptación:** producto base/ecosistema, causa/intervalo, evidencia, base instalada/proxy, score y confianza.
+
+### US-021 — Validar compatibilidad
+
+Como analista, quiero relacionar un repuesto con modelos compatibles sin elevar afirmaciones débiles a verificadas.
+
+**Aceptación:** fuente, estados `CLAIMED/VERIFIED/CONFLICTED/REJECTED`, cobertura y conflictos visibles.
+
+### US-022 — Relacionar productos
+
+Como analista, quiero registrar accesorios, consumibles, reemplazos, alternativas y complementos con evidencia.
+
+**Aceptación:** dirección/tipo, assertions append-only, fuente/fecha/método/confianza y revisión antes de `VERIFIED`.
+
+### US-040 — Identificar estacionalidad
+
+Como operador, quiero saber cuándo preparar y vender un producto o nicho.
+
+**Aceptación:** baseline, histórico, índices, peaks, lead time, evergreen/insuficiencia, confianza y cobertura; asking history no se trata como demanda.
+
+### US-041 — Evaluar canal de venta
+
+Como operador, quiero comparar canales mediante fees, demanda, velocidad y restricciones para elegir cómo vender.
+
+**Aceptación:** costos/condiciones por canal, evidencia fechada, recomendación explicada y datos faltantes.
 
 ## Definition of Ready
 
-Una historia está lista para sprint cuando tiene:
-
-- usuario y resultado;
-- criterios verificables;
-- épica y prioridad;
-- dependencias conocidas;
-- datos/fixtures previstos;
-- decisiones bloqueantes identificadas;
-- tamaño suficiente para completarse dentro del sprint o división propuesta.
+Una historia está lista cuando tiene usuario/resultado, aceptación verificable, épica/prioridad, dependencias, fixtures previstos, decisiones bloqueantes y tamaño abordable.
 
 ## Definition of Done
 
@@ -171,9 +152,10 @@ Una historia está terminada cuando:
 
 - funciona según aceptación;
 - tiene pruebas proporcionales al riesgo;
-- incluye datos de ejemplo sin secretos;
+- incluye datos de ejemplo etiquetados y sin secretos;
 - está documentada;
-- registra decisiones y cambios relevantes;
+- registra decisiones/cambios relevantes;
 - conserva compatibilidad o documenta migración;
 - pasa validaciones del repositorio;
-- fue demostrada o revisada.
+- fue demostrada o revisada;
+- código, pruebas y estado documental coinciden.

@@ -8,7 +8,10 @@ Las decisiones que cambian arquitectura, alcance, datos, seguridad o forma de tr
 - [[ADR-002]] — Mercado inicial Chile y moneda CLP — `Accepted`.
 - [[ADR-003]] — Adquisición inicial mediante carga manual trazable — `Accepted`.
 - [[ADR-004]] — Stack e interfaz web inicial — `Accepted`.
-- [[ADR-005]] — Autenticación e aislamiento mediante espacios de trabajo — `Accepted`.
+- [[ADR-005]] — Autenticación e aislamiento mediante espacios de trabajo — `Accepted`; secuencia modificada por [[ADR-008]].
+- [[ADR-006]] — Opportunity como agregado central y perfil MVP-A Resale — `Accepted`; reemplaza el alcance MVP de [[ADR-001]].
+- [[ADR-007]] — Separar evidencia de mercado, pricing y precio máximo de compra — `Accepted`.
+- [[ADR-008]] — Diferir Platform Access del primer ciclo comercial — `Accepted`.
 
 ## Estados
 

@@ -10,7 +10,8 @@ status: planned
 
 **Inputs:** scores componentes, riesgos, cobertura, calidad y versión.  
 **Outputs:** `OpportunityScore`, `RiskScore`, confianza, coverage, gates y explicación.  
-**Gate:** no cambia pesos durante la evaluación ni oculta inputs desfavorables.  
+**Gate:** no cambia pesos, no oculta inputs desfavorables y etiqueta el perfil MVP-A como `UNCALIBRATED`.
+
 **Eval:** reproducibilidad, completitud de explicación y calibración posterior.
 
 Modelo: [[SCORING_MODEL]]. Contrato común: [[AGENT_ARCHITECTURE]].

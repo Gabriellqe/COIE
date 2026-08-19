@@ -68,9 +68,12 @@ export default async function OpportunityDetailPage({
                 <small>No calibrado</small>
               </div>
               <div>
-                <span>Mediana</span>
+                <span>Mediana ASKING</span>
                 <strong>{clp.format(opportunity.statistics.median)}</strong>
-                <small>{opportunity.statistics.sampleSize} comparables</small>
+                <small>
+                  {opportunity.statistics.sampleSize} comparables · no es valor
+                  realizable
+                </small>
               </div>
               <div>
                 <span>Confianza</span>
@@ -177,6 +180,8 @@ export default async function OpportunityDetailPage({
                 <li>Compatibilidad real de la pieza</li>
                 <li>Costos de compra y venta</li>
                 <li>Evidencia de venta confirmada suficiente</li>
+                <li>Quick, Target y Premium: no calculados</li>
+                <li>Maximum Buy y liquidez: no calculados</li>
               </ul>
             </div>
           </article>

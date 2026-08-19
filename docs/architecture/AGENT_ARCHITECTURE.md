@@ -1,15 +1,15 @@
 ---
 type: architecture
 status: proposed
-version: 0.1
-updated: 2026-08-12
+version: 0.2
+updated: 2026-08-19
 ---
 
 # Arquitectura de agentes
 
 ## 1. Alcance
 
-Los agentes son especialistas de investigación y análisis. Su implementación pertenece a P2; durante el MVP, sus contratos sirven para separar responsabilidades incluso si se ejecutan como servicios deterministas o flujos manuales.
+Los agentes son especialistas futuros. En MVP-A sus contratos separan responsabilidades aunque las capacidades se implementen como reglas o flujos manuales. No sustituyen el agregado Opportunity ni se ejecutan autónomamente.
 
 Un agente puede proponer, calcular o explicar. No puede comprar, publicar, contactar terceros, aprobar capital ni escalar inventario sin una acción humana explícita.
 
@@ -21,12 +21,13 @@ flowchart TD
     O --> M["Market Agent"]
     O --> C["Competition Agent"]
     O --> P["Pricing Agent"]
+    O --> CP["Commercial Pricing Agent"]
     O --> S["Sourcing Agent"]
     O --> K["Compatibility Agent"]
     O --> E["Economics Agent"]
     O --> R["Risk Agent"]
     O --> G["Scoring Agent"]
-    D & M & C & P & S & K & E & R --> KB[("Base de conocimiento")]
+    D & M & C & P & CP & S & K & E & R --> KB[("Base de conocimiento")]
     KB --> G
     G --> H{"Revisión humana"}
 ```
@@ -42,10 +43,11 @@ task_id: uuid
 agent_type: MARKET
 objective: "Estimar el rango de precio comparable"
 subject_refs:
+  kind: PRODUCT
   product_id: uuid
   market_id: uuid
 constraints:
-  opportunity_type: RESALE
+  opportunity_strategy: RESALE
   as_of: 2026-08-12T12:00:00Z
   allowed_sources: []
   max_age_days: 14
@@ -98,13 +100,21 @@ Ninguna afirmación factual externa se acepta sin `evidence_refs`. `confidence` 
 
 **Entrega:** `CompetitionScore` favorable, métricas subyacentes y limitaciones del mercado observado.
 
-### Pricing Agent
+### Price Intelligence Agent
 
-**Responsabilidad:** construir el conjunto comparable y estimar precio de mercado.
+**Responsabilidad:** construir el conjunto comparable y producir MarketPriceEstimate.
 
 **Entrega:** media, mediana, rango, dispersión, outliers, segmentación por condición y calidad del conjunto.
 
 **No hace:** mezclar precio pedido con precio vendido sin identificarlos.
+
+### Commercial Pricing Agent
+
+**Responsabilidad:** proponer Quick/Target/Premium según evidencia, canal y objetivo.
+
+**Entrega:** PricingRecommendation, suficiencia, supuestos y confianza.
+
+**No hace:** llamar Quick Sale a un descuento arbitrario ni publicar automáticamente.
 
 ### Sourcing Agent
 
@@ -124,7 +134,7 @@ Ninguna afirmación factual externa se acepta sin `evidence_refs`. `confidence` 
 
 ### Economics Agent
 
-**Responsabilidad:** calcular landed cost, contribución, margen, ROI y escenarios.
+**Responsabilidad:** calcular costos, contribución, margen, ROI, reservas y Maximum Buy.
 
 **Entrega:** cálculo reproducible, moneda, cantidad, supuestos y sensibilidad.
 
@@ -150,12 +160,13 @@ Secuencia inicial:
 
 ```text
 1. Resolver identidad y alcance.
-2. Market + Competition + Pricing en paralelo cuando haya conectores.
-3. Sourcing + Compatibility según tipo de oportunidad.
-4. Economics cuando existan precio y costos suficientes.
-5. Risk sobre todas las evidencias.
-6. Scoring después de validar contratos y cobertura.
-7. Revisión humana y transición de estado.
+2. Price Intelligence + Market/Competition cuando exista evidencia.
+3. Commercial Pricing sólo cuando sus inputs sean suficientes.
+4. Economics/Maximum Buy con precio, costos y objetivo explícitos.
+5. Sourcing o Compatibility sólo según strategy/horizonte.
+6. Risk sobre todas las evidencias.
+7. Scoring después de validar contratos y cobertura.
+8. Revisión humana y transición de estado.
 ```
 
 Una respuesta `PARTIAL` puede continuar el flujo, pero reduce cobertura. `BLOCKED` identifica exactamente el dato o permiso necesario.
@@ -220,4 +231,6 @@ Los archivos en `agents/` proporcionan fichas operativas breves. Este documento 
 - [[SYSTEM_ARCHITECTURE]]
 - [[DATA_MODEL]]
 - [[SCORING_MODEL]]
+- [[OPPORTUNITY_MODEL]]
+- [[PRICING_MODEL]]
 - [[CONTEXT]]

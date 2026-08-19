@@ -1,12 +1,13 @@
 import type { CanonicalDataset } from "@/contracts/canonical-dataset.schema";
 import type { MarketStatistics } from "@/domain/market-statistics";
+import type { OpportunityStatus } from "@/domain/opportunity-state";
 
 export type OpportunityListItem = {
   id: string;
   productName: string;
   type: "RESALE";
-  status: "RESEARCHING";
-  medianMarketPrice: number;
+  status: OpportunityStatus;
+  medianAskingPrice: number;
   sampleSize: number;
   scoreStatus: "UNCALIBRATED";
 };

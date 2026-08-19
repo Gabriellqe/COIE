@@ -1,118 +1,136 @@
 ---
 type: roadmap
 status: active
-updated: 2026-08-18
+updated: 2026-08-19
 ---
 
 # Roadmap
 
-El roadmap está orientado a resultados, no a fechas arbitrarias. Cada fase avanza sólo cuando cumple su puerta de salida.
+El roadmap se organiza por decisiones comerciales demostrables, no por motores aislados ni fechas arbitrarias.
 
-## Vista general
+## Secuencia
 
 ```text
-Phase 0  Foundation
-   ↓
-Phase 1  Market Price Intelligence
-   ↓
-Phase 2  Resale Intelligence
-   ↓
-Phase 3  Replenishment Intelligence
-   ↓
-Phase 4  Sourcing Intelligence
-   ↓
-Phase 5  Experiments
-   ↓
-Phase 6  Learning
-   ↓
-Phase 7  Autonomous Discovery
+Foundation / Concept Reconciliation
+        ↓
+MVP-A1 — Market Evidence
+        ↓
+MVP-A2 — Resale Decision
+        ↓
+MVP-A3 — Experimentation Lite
+        ↓
+MVP-B — Sourcing + Economics ampliado
+        ↓
+MVP-C — Replenishment + Ecosystem + Compatibility
+        ↓
+MVP-D — Niche + Catalog + Bundles
+        ↓
+Seasonality
+        ↓
+Learning
+        ↓
+Autonomous Discovery
 ```
 
-## Phase 0 — Foundation
+Platform Access es un track de soporte: se activa antes de datos reales multiusuario, no como prerequisito del primer ciclo DEMO/manual.
 
-**Resultado:** repositorio documentado, decisiones básicas, arquitectura lógica, backlog, contratos, aislamiento multiusuario modelado y esqueleto técnico reproducible.
+## Incremento 0 — Foundation y reconciliación conceptual
 
-**Entregables:** documentos objetivo, Sprint 0, ADR, mercado/fuente inicial, stack, contratos de workspace, fixtures, validaciones y benchmark.
+**Resultado:** documentación, decisiones, contratos y shell DEMO alineados alrededor de `Opportunity`.
 
-**Puerta de salida:**
+**Incluye:** ADR, mercado Chile/CLP, adquisición manual, esquema Foundation, fixture, validaciones, benchmark y FND-013.
 
-- decisiones FND-006 a FND-008 aceptadas;
-- esqueleto y tests básicos ejecutables;
-- fixture canónico válido;
-- historias P0 refinadas y primer incremento seleccionado;
-- no existen contradicciones críticas entre PRD, datos y scoring.
+**Puerta:**
 
-El caso de referencia inicial es Chile/CLP y un repuesto usado asociado a NK150. Es una validación vertical, no una restricción permanente del producto.
+- documentos de autoridad sin contradicciones críticas;
+- UI no confunde mediana `ASKING` con Market Value;
+- `unknown` no se muestra como cero;
+- primera fuente autorizada resuelta o gate explícito;
+- backlog A1 cumple Definition of Ready.
 
-## Phase 1 — Market Price Intelligence
+## MVP-A1 — Market Evidence
 
-**Resultado:** estimación trazable de valor de mercado para un producto.
+**Pregunta:** ¿qué muestran realmente los comparables?
 
-**Incluye:** identidad, listings, observaciones, histórico, comparables y estadísticas.
+**Incluye:** producto/publicación, normalización, observaciones, histórico, cohortes, estadísticas y `MarketPriceEstimate`.
 
-**Puerta:** US-001, US-002 y US-003 cumplen Definition of Done con una fuente real autorizada y fixtures.
+**Puerta:** F-01 de [[PRD]] funciona con DEMO y carga manual trazable; `ASKING/SOLD`, condición, variante, moneda y fecha permanecen separados; suficiencia y exclusiones son visibles.
 
-## Phase 2 — Resale Intelligence
+## MVP-A2 — Resale Decision
 
-**Resultado:** oportunidades `RESALE` ordenadas por economía, liquidez y riesgo.
+**Pregunta:** ¿conviene comprar y cuánto puedo pagar?
 
-**Incluye:** costos, contribución, señales básicas, scoring, explicación y estados.
+**Incluye:** `PricingRecommendation`, `MaximumBuyPrice`, Economics Core, liquidez/proxy, riesgo, score no calibrado, confianza, cobertura, gates y recomendación humana.
 
-**Puerta:** al menos un caso completo produce recomendación reproducible, supera revisión humana y define experimento mínimo.
+**Puerta:** F-02 produce cálculo o `unknown` explicado para cada salida; ningún dato insuficiente se inventa; la decisión puede investigar, descartar o preseleccionar.
 
-## Phase 3 — Replenishment Intelligence
+## MVP-A3 — Experimentation Lite
 
-**Resultado:** oportunidades `REPLENISHMENT` con recurrencia y compatibilidad trazables.
+**Pregunta:** ¿funcionó la hipótesis bajo límites definidos?
 
-**Incluye:** ecosistemas, producto base, compatibilidades, reposición y base instalada/proxies.
+**Incluye:** predicción congelada, cantidad, capital/loss limit, duración, criterios, aprobación, observaciones y resultado.
 
-**Puerta:** al menos un ecosistema demuestra cobertura de compatibilidad y score con datos reales suficientes.
+**Puerta:** primer experimento cerrado como `VALIDATED`, `REJECTED` o `INCONCLUSIVE`, comparado con benchmark y sin automatizar capital.
 
-## Phase 4 — Sourcing Intelligence
+## MVP-B — Sourcing + Economics ampliado
 
-**Resultado:** escenarios de abastecimiento y landed cost comparables.
+**Pregunta:** ¿dónde comprar y cuál es el costo total?
 
-**Incluye:** proveedores, ofertas, MOQ, lead time, impuestos/aduana y sensibilidad.
+**Incluye:** proveedores, ofertas, MOQ, lead time, shipping, impuestos, aduana, landed cost, sensibilidad y rutas de abastecimiento.
 
-**Puerta:** economía base/adversa reproducible y riesgos críticos visibles para las oportunidades seleccionadas.
+**Habilita:** `IMPORT` y `ARBITRAGE` después de modelar matching, monedas y rutas.
 
-Parte de esta fase se adelanta al P0 cuando el cálculo del MVP necesita costos de proveedor.
+**Puerta:** escenarios base/adverso reproducibles y riesgos críticos visibles.
 
-## Phase 5 — Experiments
+## MVP-C — Replenishment + Ecosystem + Compatibility
 
-**Resultado:** pruebas comerciales acotadas con predicción y resultado.
+**Pregunta:** ¿puede construirse recurrencia y profundidad de catálogo?
 
-**Incluye:** aprobación, stop conditions, métricas, decisión y auditoría.
+**Incluye:** clasificación de consumible, ciclo de reemplazo, `ProductEcosystem`, base instalada/proxy, Compatibility y ProductRelationship v1.
 
-**Puerta:** primer experimento cerrado conforme a [[EXPERIMENTATION]] y comparación con benchmark manual.
+**Puerta:** una oportunidad `REPLENISHMENT` explica recurrencia, compatibilidad, economía y confianza con evidencia suficiente.
 
-## Phase 6 — Learning
+## MVP-D — Niche + Catalog + Bundles
 
-**Resultado:** calibración basada en resultados, no ajustes anecdóticos.
+**Pregunta:** ¿en qué mercado entrar y qué conjunto vender?
 
-**Incluye:** cohortes, error, backtesting, nuevas versiones de reglas/pesos.
+**Incluye:** sujetos `NICHE` y `PRODUCT_SET`, NicheScore, profundidad de SKU, catalog expansion, cross-sell y bundles.
 
-**Puerta:** evidencia fuera de muestra de mejora y decisión documentada.
+**Puerta:** al menos un nicho produce hipótesis, evidencia, productos iniciales y experimento; no depende de agentes autónomos.
 
-## Phase 7 — Autonomous Discovery
+## Seasonality
 
-**Resultado:** agentes supervisados proponen oportunidades sin iniciar acciones comerciales.
+**Pregunta:** ¿cuándo vender y cuándo preparar inventario?
 
-**Incluye:** orquestación, evaluaciones, límites de autoridad y monitoreo.
+Se activa sólo con histórico, baseline y cobertura suficientes según [[SEASONALITY]]. No bloquea MVP-A.
 
-**Puerta:** calidad igual o superior al flujo asistido en un conjunto de evaluación, sin afirmaciones no trazables ni violaciones de límites.
+## Learning
+
+**Pregunta:** ¿dónde se equivocan sistemáticamente las predicciones?
+
+Incluye cohortes, análisis de error, backtesting, calibración y nuevas versiones. Requiere resultados reales suficientes; no ajusta pesos caso a caso.
+
+## Autonomous Discovery
+
+Agentes supervisados proponen oportunidades después de que el flujo asistido tenga contratos, evaluaciones y límites de autoridad estables.
+
+## Track Platform Access
+
+Conserva workspaces, Supabase Auth y RLS como arquitectura objetivo. Se activa antes de incorporar datos reales de varios usuarios o colaboración. Ver [[ADR-008]].
 
 ## Indicadores por horizonte
 
 | Horizonte | Indicador dominante |
 |---|---|
-| Foundation | cobertura de contratos y reproducibilidad |
-| Price Intelligence | precisión/cobertura de precio comparable |
-| Resale/Replenishment | calidad y utilidad del ranking |
-| Experiments | tasa de oportunidades validadas |
-| Learning | error de predicción y calibración |
+| Foundation | coherencia y reproducibilidad |
+| A1 | calidad/cobertura de evidencia |
+| A2 | utilidad y explicabilidad de decisión |
+| A3 | resultado frente a predicción |
+| B/C/D | oportunidades evaluables por estrategia |
+| Seasonality | error de timing/peak |
+| Learning | calibración fuera de muestra |
 | Negocio | capital en oportunidades rentables validadas |
 
 ## Revisión
 
-Se revisa al cierre de cada sprint. Cambiar orden o puerta requiere registrar razón en [[CHANGELOG]] y, si afecta arquitectura o producto, un ADR.
+Cambiar secuencia, puertas o perfil activo requiere changelog y ADR cuando afecte alcance o arquitectura.

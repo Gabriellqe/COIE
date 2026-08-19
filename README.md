@@ -3,20 +3,21 @@
 Motor de inteligencia comercial para detectar, analizar, validar y priorizar oportunidades basadas en evidencia.
 
 > Estado: **Sprint 0 — Project Foundation (`IN_PROGRESS`)**
-> Fase del producto: **Foundation técnica con esqueleto ejecutable**
+> Fase del producto: **Foundation / reconciliación conceptual con esqueleto ejecutable**
 
 ## Propósito
 
-COIE transforma datos dispersos de marketplaces, proveedores, precios, demanda, competencia y ventas propias en recomendaciones comerciales explicables. El sistema no intenta responder simplemente «qué producto vender», sino qué oportunidad ofrece la mejor combinación de evidencia, rentabilidad, recurrencia, velocidad y riesgo.
+COIE transforma una hipótesis comercial en una `Opportunity` evaluada, probada y aprendida. Organiza el recorrido `DISCOVER → EVALUATE → TEST → MEASURE → SCALE / REJECT / MODIFY` y ayuda a responder qué vender, si vale la pena, dónde comprar, cómo vender y si conviene continuar.
 
-## Alcance inicial
+## Alcance inicial — MVP-A Resale Decision
 
-El MVP se concentra en dos tipos de oportunidad:
+El primer vertical implementa únicamente:
 
-- `RESALE`: productos usados potencialmente infravalorados.
-- `REPLENISHMENT`: consumibles o repuestos con demanda recurrente.
+- estrategia `RESALE`;
+- sujeto efectivo `PRODUCT` respaldado por publicaciones;
+- evidencia de mercado, decisión de reventa y Experimentation Lite por incrementos.
 
-Los demás tipos permanecen modelados para evolución futura, pero no forman parte de la implementación inicial.
+`REPLENISHMENT`, sourcing completo, nichos, catálogo, bundles, estacionalidad y learning permanecen en el roadmap, no en el perfil ejecutable actual.
 
 El primer caso vertical usa Chile, `CLP` y un repuesto usado asociado a NK150 con datos totalmente sintéticos. Mercado Libre Chile y Facebook Marketplace son fuentes candidatas; no existe todavía un conector autorizado.
 
@@ -27,8 +28,10 @@ El Sprint 0 incluye un shell web A+B:
 - dashboard operativo A en `/`;
 - detalle analítico B en `/opportunities/opportunity-demo-001`;
 - fixture canónico DEMO sin credenciales ni red;
-- estadísticas de precio por condición, tipo de precio y moneda;
+- estadísticas de precios pedidos por condición, tipo de precio y moneda;
 - validación de contratos, documentación y build.
+
+El shell calcula una mediana DEMO `USED/ASKING/CLP`; no calcula todavía Market Value realizable, Quick/Target/Premium, Maximum Buy, liquidez, economía ni score calibrado.
 
 ### Requisitos
 
@@ -64,6 +67,9 @@ El comando ejecuta formato, lint, tipos, pruebas, enlaces documentales y build d
 - [[DATA_MODEL]] — entidades, relaciones y reglas de datos.
 - [[AGENT_ARCHITECTURE]] — responsabilidades y contratos de agentes.
 - [[SCORING_MODEL]] — scores, fórmula inicial y explicabilidad.
+- [[OPPORTUNITY_MODEL]] — strategy, subject y ciclo de decisión.
+- [[PRICING_MODEL]] — market evidence, pricing y maximum buy.
+- [[SEASONALITY]] — timing futuro y puerta de activación.
 - [[EPICS]] — épicas del producto.
 - [[USER_STORIES]] — historias iniciales y aceptación.
 - [[SPRINTS]] — índice y reglas de sprints.

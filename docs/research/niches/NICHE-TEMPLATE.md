@@ -24,6 +24,8 @@ updated: YYYY-MM-DD
 
 ## Proveedores y logística
 
+## Seasonality / evergreen / preparación
+
 ## Potencial B2B / crecimiento
 
 ## Evidencia

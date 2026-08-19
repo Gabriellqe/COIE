@@ -1,8 +1,8 @@
 ---
 type: architecture
 status: proposed
-version: 0.2
-updated: 2026-08-18
+version: 0.3
+updated: 2026-08-19
 ---
 
 # Modelo de datos
@@ -26,6 +26,11 @@ Definir un modelo canónico que preserve historia y procedencia, permita compara
 
 ## 3. Vista conceptual
 
+El documento distingue:
+
+- **perfil Foundation/MVP-A:** `RESALE + PRODUCT`, implementado por schema `0.1.0`;
+- **modelo objetivo:** strategy + subject tipado, activado mediante versiones futuras.
+
 ```mermaid
 erDiagram
     USER_PROFILE ||--o{ WORKSPACE_MEMBER : integra
@@ -45,6 +50,9 @@ erDiagram
     PRODUCT ||--o{ SUPPLIER_OFFER : abastecido_por
     PRODUCT ||--o{ SIGNAL : evidencia
     PRODUCT ||--o{ OPPORTUNITY : origina
+    OPPORTUNITY ||--o{ MARKET_PRICE_ESTIMATE : sustenta
+    OPPORTUNITY ||--o{ PRICING_RECOMMENDATION : recomienda
+    OPPORTUNITY ||--o{ MAXIMUM_BUY_PRICE : limita
     OPPORTUNITY ||--o{ SCORE_RUN : evaluada_por
     OPPORTUNITY ||--o{ EXPERIMENT : valida
     EXPERIMENT ||--o{ EXPERIMENT_OBSERVATION : mide
@@ -139,6 +147,24 @@ Campos: `id`, `product_id`, `base_product_id`, `compatibility_type`, `status`, `
 
 Estados: `CLAIMED`, `VERIFIED`, `CONFLICTED`, `REJECTED`. Una afirmación del vendedor no equivale a compatibilidad verificada.
 
+### ProductRelationship — futuro
+
+Arista dirigida o simétrica entre productos canónicos:
+
+```text
+id / workspace_id
+from_product_id / to_product_id
+relationship_type
+directionality
+scope_attributes
+current_status
+current_resolution_id?
+```
+
+Tipos iniciales: `ACCESSORY_FOR`, `CONSUMABLE_FOR`, `REPLACEMENT_FOR`, `SUBSTITUTE_FOR`, `COMPLEMENTARY_WITH`, `COMPONENT_OF`, `FREQUENTLY_BUNDLED_WITH`.
+
+`ProductRelationshipAssertion` conserva evidencia append-only, fuente, fecha, método, confianza y estado. Una sugerencia de IA no se convierte en relación verificada. `Compatibility` permanece especializada para fitment `Product ↔ BaseProduct`.
+
 ## 6. Fuentes, publicaciones y precios
 
 ### DataSource
@@ -184,6 +210,22 @@ Campos: `id`, `workspace_id`, `subject_type`, `subject_id`, `price_type`, `amoun
 
 `price_type`: `ASKING`, `SOLD`, `SUPPLIER`, `REFERENCE`, `INTERNAL_SALE`. Los precios publicados y vendidos nunca se mezclan sin diferenciación.
 
+### MarketPriceEstimate
+
+Ejecución derivada de una cohorte comparable. Conserva sujeto/producto, mercado, condición, tipo de precio, moneda, fecha de corte, ventana, definición de cohorte, muestra, estadísticas, estimación central opcional, confianza, cobertura, exclusiones, inputs, evidencia DEMO/REAL y versión.
+
+`ASKING` y `SOLD` producen ejecuciones separadas. Sin suficiencia, `central_estimate` es `null` y el estado `INSUFFICIENT_DATA`.
+
+### PricingRecommendation
+
+Ejecución comercial con escenarios `QUICK`, `TARGET`, `PREMIUM`, canal, precio/velocidad opcionales, supuestos, confianza, cobertura y estado de calibración. Nunca publica automáticamente.
+
+### MaximumBuyPrice
+
+Límite derivado del escenario de venta, costos, contribución mínima, reserva de riesgo y capital/tiempo. Un costo crítico desconocido produce gate y valor `null`.
+
+Especificación completa: [[PRICING_MODEL]].
+
 ## 7. Señales
 
 ### Signal
@@ -209,6 +251,10 @@ method_version
 Tipos iniciales: `DEMAND`, `SUPPLY`, `COMPETITION`, `TREND`, `INSTALLED_BASE`, `REPLENISHMENT_INTERVAL`, `RISK`.
 
 Los nombres conceptuales `DemandSignal`, `SupplySignal`, `CompetitionSignal` y `TrendSignal` son especializaciones de este sobre. Se separarán físicamente sólo si requieren atributos propios.
+
+### SeasonalityProfile — futuro
+
+Ejecución por `PRODUCT` o `NICHE`, mercado, granularidad, ventana, baseline, buckets, clasificación, peaks, lead time de preparación, confianza, cobertura, método, evidencia e inputs. `INSUFFICIENT_DATA` es distinto de `EVERGREEN`. Ver [[SEASONALITY]].
 
 ## 8. Abastecimiento y economía
 
@@ -238,6 +284,8 @@ taxes
 customs
 landed_cost
 sale_price
+pricing_recommendation_id?
+pricing_scenario?
 marketplace_fee
 payment_fee
 outbound_shipping
@@ -272,6 +320,8 @@ Las unidades de tiempo de `capital_efficiency` deben declararse; la comparación
 
 ### Opportunity
 
+#### Perfil Foundation/MVP-A
+
 | Campo | Tipo | Regla |
 |---|---|---|
 | `id` | ID | requerido |
@@ -285,6 +335,17 @@ Las unidades de tiempo de `capital_efficiency` deben declararse; la comparación
 | `owner_id` | ID nullable | responsable humano |
 | `rejection_reason` | texto nullable | requerido al rechazar |
 | `created_at`, `updated_at` | timestamp | requeridos |
+
+#### Modelo objetivo
+
+La evolución sustituirá conceptualmente `opportunity_type + product_id` por `strategy + subject`:
+
+```text
+Strategy: RESALE | REPLENISHMENT | IMPORT | ARBITRAGE | ...
+Subject: PRODUCT | LISTING | NICHE | SUPPLY_ROUTE | PRODUCT_SET
+```
+
+Se preservarán claves foráneas tipadas y compatibilidad strategy–subject. El cambio exige versión/migración y no está implementado en schema `0.1.0`. Ver [[OPPORTUNITY_MODEL]].
 
 ### ScoreRun
 
@@ -323,6 +384,8 @@ decision_reason
 
 Estados: `DRAFT`, `APPROVED`, `RUNNING`, `COMPLETED`, `CANCELLED`.
 
+MVP-A3 implementará primero un perfil Lite sin integraciones de inventario/canales. Congelará referencias de predicción, capital/loss limit, criterios, observaciones manuales y resultado `VALIDATED`, `REJECTED` o `INCONCLUSIVE`.
+
 ### ExperimentObservation
 
 Serie temporal de `views`, `clicks`, `messages`, `questions`, `units_sold`, `returns`, `repeat_purchase` y costos reales. Campos comunes: `id`, `experiment_id`, `metric`, `value`, `unit`, `observed_at`, `source_id`.
@@ -356,6 +419,7 @@ Cambios manuales relevantes: actor, acción, entidad, antes/después permitido, 
 ## 12. Restricciones esenciales
 
 - Un `ScoreRun` apunta a inputs existentes y no mutables.
+- Market evidence, pricing recommendation y máximo de compra son ejecuciones distintas.
 - Una oportunidad tiene sólo un score actual, pero conserva todos los anteriores.
 - No se valida un experimento sin criterios definidos antes de `RUNNING`.
 - `actual_*` no puede cargarse como `predicted_*` ni viceversa.
@@ -371,9 +435,7 @@ Cambios manuales relevantes: actor, acción, entidad, antes/después permitido, 
 Implementar primero:
 
 ```text
-UserProfile
 Workspace
-WorkspaceMember
 Market
 Product
 ProductAlias
@@ -384,10 +446,10 @@ ListingSnapshot
 PriceObservation
 CaptureRun
 Opportunity
-EconomicsRun
-ScoreRun
-OpportunityTransition
+MarketPriceEstimate
 ```
+
+`EconomicsRun`, pricing, máximo de compra, score y transiciones se incorporan en MVP-A2; Experiment Lite en MVP-A3. Las entidades de Platform Access permanecen en el contrato, pero su integración real se difiere según [[ADR-008]].
 
 Las demás entidades se introducen al activar la épica que las necesita.
 
@@ -397,3 +459,6 @@ Las demás entidades se introducen al activar la épica que las necesita.
 - [[PRD]]
 - [[SCORING_MODEL]]
 - [[EXPERIMENTATION]]
+- [[OPPORTUNITY_MODEL]]
+- [[PRICING_MODEL]]
+- [[SEASONALITY]]

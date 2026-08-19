@@ -1,8 +1,8 @@
 ---
 type: scoring-model
 status: proposed
-version: 0.1.0
-updated: 2026-08-12
+version: 0.2.0
+updated: 2026-08-19
 ---
 
 # Modelo de scoring
@@ -10,6 +10,8 @@ updated: 2026-08-12
 ## 1. Propósito
 
 Comparar oportunidades con una escala común sin ocultar evidencia, incertidumbre ni riesgo. El modelo inicial es heurístico y debe calibrarse con experimentos reales; no es aprendizaje automático.
+
+El único perfil activo de MVP-A es `RESALE`. Sus pesos continúan como hipótesis `UNCALIBRATED`; la fórmula `REPLENISHMENT` se conserva como candidata futura y no se ejecuta en el primer vertical.
 
 ## 2. Salidas separadas
 
@@ -23,6 +25,8 @@ Cada evaluación produce:
 - `Explanation`: factores positivos, negativos, supuestos y datos faltantes.
 
 No se multiplica el score por la confianza. Se muestran por separado para distinguir una oportunidad poco atractiva de una prometedora pero insuficientemente sustentada.
+
+El score no es Market Value, recomendación de precio ni Maximum Buy Price. Consume esos resultados cuando existen y nunca los sustituye.
 
 ## 3. Dirección de los componentes
 
@@ -151,6 +155,8 @@ El promedio sólo puede renormalizar pesos de componentes ausentes si se cumplen
 
 ### Pesos `REPLENISHMENT` v0.1.0
 
+> Perfil candidato futuro; no implementado ni calibrado en MVP-A.
+
 | Componente | Peso |
 |---|---:|
 | DemandScore | 0.13 |
@@ -199,6 +205,7 @@ La confianza se calcula con reglas versionadas. Muchas observaciones duplicadas 
 
 - menos de tres referencias comparables de precio, salvo excepción justificada;
 - landed cost o costos variables críticos desconocidos;
+- escenario de venta o contribución mínima desconocidos para calcular Maximum Buy;
 - moneda sin conversión trazable;
 - identidad o condición del producto ambigua;
 - cobertura ponderada inferior a 60 para `SHORTLISTED`.
@@ -250,6 +257,8 @@ Se informa:
 
 Regla inicial de outliers: marcar valores fuera de `Q1 - 1.5×IQR` o `Q3 + 1.5×IQR`; no eliminarlos del histórico. Con muestras pequeñas, no aplicar automáticamente la regla y advertirlo.
 
+Esta sección produce evidencia para `MarketPriceEstimate`. Una cohorte `ASKING` no determina por sí sola Quick Sale, Target, Premium o Maximum Buy. Ver [[PRICING_MODEL]].
+
 ## 11. Explicación requerida
 
 Todo `ScoreRun` debe responder:
@@ -280,9 +289,17 @@ Los pesos no se ajustan caso a caso. Se revisan por cohortes suficientes, evitan
 
 Fuera del MVP transaccional, un nicho podrá combinar demanda, recurrencia, competencia favorable, márgenes, profundidad de SKU, logística, potencial B2B, crecimiento y disponibilidad de proveedores. Debe tener fórmula y versión independientes de `OpportunityScore`.
 
-## 14. Referencias
+## 14. Seasonality
+
+Seasonality puede actuar como señal temporal, riesgo o componente específico de una estrategia. No se incorpora automáticamente al score universal. Requiere un [[SEASONALITY]] suficiente, versionado y pertinente para la decisión.
+
+## 15. Referencias
 
 - [[PRD]]
 - [[DATA_MODEL]]
 - [[EXPERIMENTATION]]
+- [[PRICING_MODEL]]
+- [[SEASONALITY]]
 - [[ADR-001]]
+- [[ADR-006]]
+- [[ADR-007]]

@@ -1,7 +1,7 @@
 ---
 type: backlog
 status: active
-updated: 2026-08-18
+updated: 2026-08-19
 ---
 
 # Backlog
@@ -10,80 +10,105 @@ updated: 2026-08-18
 
 - Prioridad: `P0` fundamental, `P1` importante, `P2` expansión.
 - Estado: `DONE`, `IN_PROGRESS`, `READY`, `PLANNED`, `BLOCKED`.
-- Todo elemento nuevo debe vincularse a una épica, historia o entregable de Foundation.
+- Todo trabajo se vincula a Foundation, una épica o una historia.
 
 ## Foundation — Sprint 0
 
 | ID | Trabajo | Prioridad | Estado | Criterio de salida |
 |---|---|---:|---|---|
-| FND-001 | Separar documento maestro | P0 | DONE | diez documentos objetivo creados y enlazados |
-| FND-002 | Crear navegación y convenciones | P0 | DONE | README, contexto y estructura Obsidian disponibles |
-| FND-003 | Registrar decisiones iniciales | P0 | DONE | ADR-001 y log de decisiones creados |
-| FND-004 | Definir arquitectura lógica | P0 | DONE | límites, flujo, datos y agentes documentados |
-| FND-005 | Definir scoring v0.1.0 | P0 | DONE | pesos, gates, cobertura y explicación documentados |
-| FND-006 | Definir mercado/moneda inicial | P0 | DONE | ADR aceptado con alcance y razones |
-| FND-007 | Seleccionar primera fuente autorizada | P0 | IN_PROGRESS | acceso, límites y campos comprobados |
-| FND-008 | Seleccionar stack y persistencia | P0 | DONE | ADR aceptado con opciones y consecuencias |
-| FND-009 | Crear esqueleto ejecutable | P0 | DONE | aplicación, pruebas y comandos básicos operativos |
-| FND-010 | Crear fixture y perfil canónico Foundation | P0 | DONE | dataset DEMO parcial, reproducible y validado |
-| FND-011 | Configurar calidad automática | P0 | DONE | formato, pruebas y revisión de enlaces ejecutables |
-| FND-012 | Acordar benchmark manual del MVP | P0 | DONE | protocolo y métricas congelados |
+| FND-001 | Separar documento maestro | P0 | DONE | documentos operativos enlazados |
+| FND-002 | Navegación y convenciones | P0 | DONE | README/contexto/Obsidian |
+| FND-003 | Decision Log | P0 | DONE | ADR y registro disponibles |
+| FND-004 | Arquitectura y datos | P0 | DONE | límites y modelos documentados |
+| FND-005 | Scoring candidato | P0 | DONE | pesos/gates/cobertura no calibrados |
+| FND-006 | Mercado/moneda | P0 | DONE | Chile/CLP aceptado |
+| FND-007 | Primera fuente permitida | P0 | IN_PROGRESS | acceso/campos/retención comprobados |
+| FND-008 | Stack/persistencia | P0 | DONE | ADR aceptado |
+| FND-009 | Esqueleto ejecutable | P0 | DONE | shell A+B y comandos |
+| FND-010 | Fixture/perfil Foundation | P0 | DONE | DEMO parcial validado |
+| FND-011 | Calidad automática | P0 | DONE | check/test/docs/build |
+| FND-012 | Benchmark manual | P0 | DONE | protocolo congelado |
+| FND-013 | Reconciliar concepto y alcance MVP-A | P0 | DONE | ADR-006/007/008, docs, código semántico y backlog alineados |
 
-## P0 — Flujo vertical MVP
-
-| ID | Épica / historia | Trabajo | Estado |
-|---|---|---|---|
-| DA-001 | EPIC-01 / US-002 | Implementar contrato de conector y `CaptureRun` | PLANNED |
-| DA-002 | EPIC-01 / US-002 | Implementar importación manual estructurada | PLANNED |
-| DA-003 | EPIC-01 / US-002 | Implementar primer conector autorizado | PLANNED |
-| PI-001 | EPIC-02 / US-001 | Crear entidad `Product` y aliases | PLANNED |
-| PI-002 | EPIC-02 / US-003 | Normalizar nombre, marca, modelo y variante | PLANNED |
-| PI-003 | EPIC-02 / US-003 | Resolver coincidencias con confianza y revisión | PLANNED |
-| MI-001 | EPIC-03 / US-001 | Persistir listing, snapshot y precio | PLANNED |
-| MI-002 | EPIC-03 / US-001 | Construir conjunto comparable por condición | PLANNED |
-| MI-003 | EPIC-03 / US-001 | Calcular estadísticas robustas de precio | PLANNED |
-| MI-004 | EPIC-03 / US-005 | Crear señal inicial de demanda | PLANNED |
-| MI-005 | EPIC-03 / US-005 | Crear señal inicial de competencia | PLANNED |
-| SO-001 | EPIC-07 / US-004 | Registrar proveedor y oferta | PLANNED |
-| EC-001 | EPIC-07 / US-004 | Calcular landed cost y contribución | PLANNED |
-| EC-002 | EPIC-07 / US-004 | Calcular ROI y capital efficiency | PLANNED |
-| SC-001 | EPIC-08 / US-007 | Implementar normalización versionada | PLANNED |
-| SC-002 | EPIC-08 / US-007 | Calcular score, riesgo, confianza y cobertura | PLANNED |
-| SC-003 | EPIC-08 / US-007 | Implementar gates y explicación | PLANNED |
-| OP-001 | EPIC-04 / US-008 | Crear oportunidad y máquina de estados | PLANNED |
-| OP-002 | EPIC-04 / US-006 | Entregar listado/ranking inicial | PLANNED |
-| AU-001 | EPIC-11 / US-009 | Implementar login, workspace personal y aislamiento RLS | PLANNED |
-
-## P1 — Reposición, tablero y experimentación
+## MVP-A1 — Market Evidence
 
 | ID | Épica / historia | Trabajo | Estado |
 |---|---|---|---|
-| RP-001 | EPIC-05 / US-020 | Modelar `ProductEcosystem` y `BaseProduct` | PLANNED |
-| RP-002 | EPIC-05 / US-021 | Registrar compatibilidades y evidencia | PLANNED |
-| RP-003 | EPIC-05 / US-020 | Estimar intervalo y score de reposición | PLANNED |
-| UI-001 | EPIC-08 / US-006 | Dashboard A operativo con detalle analítico B | PLANNED |
-| EX-001 | EPIC-09 / US-030 | Crear y aprobar experimentos | PLANNED |
-| EX-002 | EPIC-09 / US-031 | Registrar métricas reales | PLANNED |
-| EX-003 | EPIC-09 / US-031 | Comparar predicción y resultado | PLANNED |
+| DA-001 | EPIC-01 / US-002 | Contrato `CaptureRun` | PLANNED |
+| DA-002 | EPIC-01 / US-001 | Importación manual estructurada | READY |
+| DA-003 | EPIC-01 / US-001 | Primer conector autorizado | BLOCKED |
+| PI-001 | EPIC-02 / US-001 | Entidad Product y aliases | PLANNED |
+| PI-002 | EPIC-02 / US-003 | Normalizar marca/modelo/variante | PLANNED |
+| PI-003 | EPIC-02 / US-003 | Matching con confianza/revisión | PLANNED |
+| MI-001 | EPIC-03 / US-001 | Persistir listing/snapshot/precio | PLANNED |
+| MI-002 | EPIC-03 / US-001 | Construir cohorte comparable | IN_PROGRESS |
+| MI-003 | EPIC-03 / US-001 | Estadística robusta y suficiencia | IN_PROGRESS |
+| MI-006 | EPIC-03 / US-001 | Materializar `MarketPriceEstimate` | PLANNED |
 
-## P2 — Expansión
+## MVP-A2 — Resale Decision
 
-| ID | Épica | Trabajo | Estado |
+| ID | Épica / historia | Trabajo | Estado |
 |---|---|---|---|
-| AG-001 | EPIC-06 | Orquestación de agentes especializados | PLANNED |
-| ND-001 | EPIC-06 | Descubrimiento automático de nichos | PLANNED |
-| CX-001 | EPIC-06 | Recomendaciones cross-sell y bundles | PLANNED |
-| LR-001 | EPIC-10 | Calibración con cohortes reales | PLANNED |
-| AL-001 | EPIC-10 | Alertas y automatización avanzada | PLANNED |
+| PR-001 | EPIC-12 / US-011 | Contrato/escenarios PricingRecommendation | PLANNED |
+| PR-002 | EPIC-12 / US-012 | MaximumBuyPrice + gates | PLANNED |
+| MI-004 | EPIC-03 / US-005 | Señal/proxy de demanda | PLANNED |
+| MI-005 | EPIC-03 / US-005 | Señal de competencia | PLANNED |
+| MI-007 | EPIC-03 / US-013 | LiquidityEstimate/proxy | PLANNED |
+| EC-001 | EPIC-07 / US-004 | Economics Core con costos manuales | PLANNED |
+| EC-002 | EPIC-07 / US-004 | ROI/capital efficiency | PLANNED |
+| SC-001 | EPIC-08 / US-007 | Normalización versionada | PLANNED |
+| SC-002 | EPIC-08 / US-007 | Score/risk/confidence/coverage | PLANNED |
+| SC-003 | EPIC-08 / US-007 | Gates y explicación | PLANNED |
+| OP-001 | EPIC-04 / US-008 | Ciclo/transiciones auditables | PLANNED |
+| OP-002 | EPIC-04 / US-010 | Caso de uso Resale Decision | PLANNED |
+
+## MVP-A3 — Experimentation Lite
+
+| ID | Épica / historia | Trabajo | Estado |
+|---|---|---|---|
+| EX-001 | EPIC-09 / US-030 | Crear/aprobar experimento Lite | PLANNED |
+| EX-002 | EPIC-09 / US-031 | Observaciones manuales append-only | PLANNED |
+| EX-003 | EPIC-09 / US-031 | Comparar predicción/resultado | PLANNED |
+| EX-004 | EPIC-09 / US-008 | INCONCLUSIVE/MODIFY → RESEARCHING | PLANNED |
+
+## MVP-B — Sourcing + Economics ampliado
+
+| ID | Épica / historia | Trabajo | Estado |
+|---|---|---|---|
+| SO-001 | EPIC-07 / US-004 | Supplier y SupplierOffer | PLANNED |
+| SO-002 | EPIC-07 | MOQ, lead time y landed cost | PLANNED |
+| SO-003 | EPIC-07 | SupplyRoute para Import/Arbitrage | PLANNED |
+
+## MVP-C/D y capacidades posteriores
+
+| ID | Épica / historia | Trabajo | Estado |
+|---|---|---|---|
+| RP-001 | EPIC-05 / US-020 | ProductEcosystem/BaseProduct | PLANNED |
+| RP-002 | EPIC-05 / US-021 | Compatibility/evidencia | PLANNED |
+| RP-003 | EPIC-05 / US-020 | Ciclo/score de reposición | PLANNED |
+| PG-001 | EPIC-14 / US-022 | ProductRelationship v1 | PLANNED |
+| ND-001 | EPIC-06 | Niche analyzer asistido | PLANNED |
+| CX-001 | EPIC-06 / US-022 | Catálogo/cross-sell/bundles | PLANNED |
+| SE-001 | EPIC-13 / US-040 | SeasonalityProfile | BLOCKED |
+| LR-001 | EPIC-10 / US-031 | Calibración por cohortes | BLOCKED |
+| AG-001 | EPIC-06 | Autonomous Discovery | PLANNED |
+
+`SE-001` requiere histórico suficiente; `LR-001`, resultados reales; `AG-001`, flujo asistido evaluado.
+
+## Experiencia y plataforma
+
+| ID | Épica / historia | Trabajo | Estado |
+|---|---|---|---|
+| UI-001 | EPIC-08 / US-006 | Dashboard funcional después de A2 | PLANNED |
+| CH-001 | EPIC-12 / US-041 | Comparación de canales | PLANNED |
+| AU-001 | EPIC-11 / US-009 | Supabase Auth/workspace/RLS | PLANNED |
+
+AU-001 se activa antes de datos reales multiusuario, no bloquea A1–A3 DEMO/manual.
 
 ## Criterio de priorización
 
-El orden se decide por:
-
-1. reducción de incertidumbre crítica;
-2. habilitación del flujo vertical;
-3. valor demostrable para el MVP;
-4. dependencia y riesgo técnico;
-5. esfuerzo y reversibilidad.
-
-No se prioriza P2 hasta que el flujo P0 produzca decisiones trazables y exista evidencia de que la automatización adicional resuelve un cuello de botella real.
+1. cerrar el ciclo de decisión más corto;
+2. reducir incertidumbre crítica;
+3. preservar trazabilidad y seguridad;
+4. validar valor antes de ampliar infraestructura;
+5. activar capacidades dependientes sólo cuando existan sus datos.

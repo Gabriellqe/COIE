@@ -2,7 +2,7 @@
 type: benchmark-protocol
 status: accepted
 version: 0.1.0
-updated: 2026-08-18
+updated: 2026-08-19
 ---
 
 # Benchmark manual del MVP v0.1.0
@@ -22,6 +22,14 @@ Estado: `PARTIAL`. Foundation prueba el último precio por listing, separación 
 ### B1 — Caso real NK150
 
 Estado: `NOT_RUN`. Requiere una pieza/variante exacta y un método permitido para obtener observaciones reales.
+
+## Etapas del benchmark MVP-A
+
+- **A1 Market Evidence:** cohorte, estadísticas, suficiencia y procedencia.
+- **A2 Resale Decision:** pricing disponible, máximo de compra/economía o gates, riesgo y decisión.
+- **A3 Experimentation Lite:** predicción contra resultado y decisión final.
+
+B0 sólo cubre parcialmente A1. No valida Quick Sale, Target, Premium, Maximum Buy, liquidez, economía ni score comercial.
 
 ## Parámetros congelados antes de cada ejecución
 
@@ -57,6 +65,16 @@ La primera comparación utiliza las mismas filas en ambos métodos para aislar v
 - afirmaciones factuales sin soporte: cero;
 - tiempo manual y tiempo asistido, registrados sin objetivo previo.
 
+Para A2/A3 se añadirán, antes de ejecutarlos:
+
+- error de precio/velocidad por escenario con ground truth definido;
+- exactitud de costos y contribución;
+- diferencia entre Maximum Buy recomendado y límite de referencia;
+- gates correctamente activados ante inputs desconocidos;
+- error de predicción frente a resultado real.
+
+No se evalúa Quick Sale contra precios `ASKING`; requiere ventas/tiempo hasta venta o un proxy acordado y etiquetado.
+
 ## Tolerancias B0
 
 - conteos, segmentación y deduplicación: exactos;
@@ -66,4 +84,4 @@ La primera comparación utiliza las mismas filas en ambos métodos para aislar v
 
 ## Criterio de aceptación
 
-El protocolo queda congelado con este documento. B0 debe pasar mediante pruebas automatizadas; B1 permanece pendiente hasta contar con evidencia real permitida.
+El protocolo base permanece congelado. Extenderlo a A2/A3 exige nueva versión antes de observar resultados. B1 sigue pendiente de evidencia real permitida.
