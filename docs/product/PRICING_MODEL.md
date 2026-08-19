@@ -139,7 +139,7 @@ Con sólo publicaciones activas no se afirma velocidad de venta.
 
 ## Perfil Foundation
 
-El shell actual sólo calcula estadísticas de una cohorte DEMO `USED/ASKING/CLP`. No calcula Market Value realizable, Quick, Target, Premium, Maximum Buy ni Liquidity.
+El shell actual materializa en lectura un `MarketPriceEstimate` DEMO `USED/ASKING/CLP` con suficiencia, inputs y exclusiones. Su persistencia histórica sigue pendiente. No calcula valor realizable, Quick, Target, Premium, Maximum Buy ni Liquidity.
 
 ## Referencias
 

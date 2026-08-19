@@ -13,6 +13,9 @@ Los cambios materiales del proyecto se registran por fecha. El documento sigue u
 - investigación [[COIE-CONCEPT-RECONCILIATION-2026-08-19]];
 - épicas de Commercial Pricing, Seasonality y Product/Catalog Relations;
 - historias para Resale Decision, escenarios de venta, máximo de compra, liquidez, relaciones y estacionalidad.
+- cohorte comparable A1 con exclusiones explícitas, último snapshot antes del corte y procedencia limitada a inputs usados;
+- `MarketPriceEstimate v0.1.0` DEMO con suficiencia, estimación nullable, cuartiles/IQR, cobertura descriptiva e inputs versionados;
+- pruebas de cohortes vacías/insuficientes, exclusiones, moneda incompatible y no reactivación de precios antiguos.
 
 ### Changed
 
@@ -25,6 +28,7 @@ Los cambios materiales del proyecto se registran por fecha. El documento sigue u
 - el shell renombra `medianMarketPrice` a `medianAskingPrice` y deja de mostrar cero por ausencia;
 - `TESTING → RESEARCHING` permite resultados inconclusos o reformulación;
 - scoring `RESALE` permanece candidato no calibrado; Replenishment queda como perfil futuro.
+- el detalle analítico muestra Market Evidence, fecha de corte, inputs y exclusiones sin presentar ASKING como valor realizable.
 
 ### Not implemented
 
@@ -32,6 +36,7 @@ Los cambios materiales del proyecto se registran por fecha. El documento sigue u
 - Quick/Target/Premium, Maximum Buy, liquidez y economía calculados;
 - ProductRelationship, Seasonality, Replenishment, Learning y agentes autónomos;
 - Supabase Auth/RLS y conectores reales.
+- persistencia append-only de carga manual y del histórico de `MarketPriceEstimate`.
 
 ### Open
 

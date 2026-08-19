@@ -41,9 +41,9 @@ updated: 2026-08-19
 | PI-002 | EPIC-02 / US-003 | Normalizar marca/modelo/variante | PLANNED |
 | PI-003 | EPIC-02 / US-003 | Matching con confianza/revisión | PLANNED |
 | MI-001 | EPIC-03 / US-001 | Persistir listing/snapshot/precio | PLANNED |
-| MI-002 | EPIC-03 / US-001 | Construir cohorte comparable | IN_PROGRESS |
-| MI-003 | EPIC-03 / US-001 | Estadística robusta y suficiencia | IN_PROGRESS |
-| MI-006 | EPIC-03 / US-001 | Materializar `MarketPriceEstimate` | PLANNED |
+| MI-002 | EPIC-03 / US-001 | Construir cohorte comparable | DONE |
+| MI-003 | EPIC-03 / US-001 | Estadística robusta y suficiencia | DONE |
+| MI-006 | EPIC-03 / US-001 | Materializar `MarketPriceEstimate` | IN_PROGRESS |
 
 ## MVP-A2 — Resale Decision
 

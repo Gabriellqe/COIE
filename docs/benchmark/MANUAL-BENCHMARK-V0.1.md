@@ -17,7 +17,7 @@ Comparar trazabilidad, consistencia y tiempo entre una investigación manual con
 
 Usa el fixture `DEMO` del repositorio. Valida elegibilidad, segmentación, deduplicación, estadísticas, procedencia y reproducibilidad.
 
-Estado: `PARTIAL`. Foundation prueba el último precio por listing, separación `ASKING`/`SOLD`, identidad básica, fecha de corte e integridad de referencias. La matriz B0 completa —incluyendo moneda alternativa, gates y economía desconocida— sigue pendiente y no se presenta como aprobada.
+Estado: `PARTIAL`. Foundation/A1 prueba selección del último snapshot antes de evaluar elegibilidad, separación `ASKING`/`SOLD`, condición, fecha de corte, exclusiones explicadas, suficiencia, IQR e integridad de referencias. La matriz B0 completa —incluyendo importación idempotente persistente, moneda alternativa en fixture, gates y economía desconocida— sigue pendiente y no se presenta como aprobada.
 
 ### B1 — Caso real NK150
 

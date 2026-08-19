@@ -26,7 +26,7 @@ describe("calculateCurrentMarketStatistics", () => {
       maximum: 55000,
       range: 10000,
       warnings: ["SMALL_SAMPLE"],
-      methodVersion: "market-statistics-v0.1.0",
+      methodVersion: "market-statistics-v0.2.0",
     });
   });
 

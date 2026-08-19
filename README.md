@@ -28,10 +28,10 @@ El Sprint 0 incluye un shell web A+B:
 - dashboard operativo A en `/`;
 - detalle analítico B en `/opportunities/opportunity-demo-001`;
 - fixture canónico DEMO sin credenciales ni red;
-- estadísticas de precios pedidos por condición, tipo de precio y moneda;
+- Market Evidence DEMO con cohorte explicada, suficiencia, IQR, inputs y exclusiones;
 - validación de contratos, documentación y build.
 
-El shell calcula una mediana DEMO `USED/ASKING/CLP`; no calcula todavía Market Value realizable, Quick/Target/Premium, Maximum Buy, liquidez, economía ni score calibrado.
+El shell materializa en lectura un `MarketPriceEstimate` DEMO `USED/ASKING/CLP`; no lo presenta como valor realizable y todavía no calcula Quick/Target/Premium, Maximum Buy, liquidez, economía ni score calibrado. La importación manual y la persistencia histórica de estas ejecuciones siguen pendientes.
 
 ### Requisitos
 

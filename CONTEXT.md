@@ -105,11 +105,14 @@ MVP-A3 Experimentation Lite
 - estrategia efectiva `RESALE`;
 - sujeto efectivo `PRODUCT` con publicaciones;
 - estadísticas de cohorte `USED/ASKING/CLP`;
+- cohorte explicada por último snapshot, fecha de corte y exclusiones;
+- `MarketPriceEstimate` DEMO calculado en lectura con suficiencia, IQR, inputs y versión;
 - procedencia, histórico, workspace y score no calibrado.
 
 ### Documentado, no implementado
 
 - sujetos `LISTING`, `NICHE`, `SUPPLY_ROUTE`, `PRODUCT_SET` nativos;
+- persistencia histórica de importaciones manuales y `MarketPriceEstimate`;
 - pricing `QUICK/TARGET/PREMIUM`;
 - `MaximumBuyPrice` y liquidez calculados;
 - reposición, grafo de productos, estacionalidad y learning;

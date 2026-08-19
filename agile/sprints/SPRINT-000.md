@@ -36,6 +36,13 @@ Preparar una base documental y técnica coherente para comenzar MVP-A Resale Dec
 - [x] FND-011 — Configurar formato, pruebas y validación documental.
 - [x] FND-012 — Congelar protocolo de benchmark manual.
 
+### MVP-A1 iniciado durante el bloqueo externo
+
+- [x] MI-002 — Construir cohorte comparable explicada.
+- [x] MI-003 — Calcular estadística robusta y suficiencia.
+- [ ] MI-006 — Persistir históricamente `MarketPriceEstimate`. `IN_PROGRESS`
+- [ ] DA-002 / MI-001 — Importación manual append-only e idempotente.
+
 ## Entregables
 
 - diez documentos objetivo del maestro;
@@ -86,7 +93,9 @@ Se investigaron las fuentes candidatas de Chile: Mercado Libre ofrece API oficia
 
 El 2026-08-19 se revisaron tres síntesis históricas del origen de COIE. La reconciliación confirmó el núcleo `DISCOVER → EVALUATE → TEST → MEASURE → SCALE/REJECT/MODIFY` y detectó brechas en Opportunity, Commercial Pricing, Maximum Buy, Seasonality y secuenciación. FND-013 integra [[ADR-006]], [[ADR-007]] y [[ADR-008]] sin modificar el maestro histórico.
 
-La validación `pnpm check` del 2026-08-19 pasó: formato, ESLint, TypeScript, 13 pruebas, 58 archivos Markdown/11 IDs y build Next.js. El shell usa ahora `medianAskingPrice`, muestra la ausencia sin cero y mantiene Quick/Target/Premium, Maximum Buy y liquidez como no calculados.
+La validación `pnpm check` del 2026-08-19 pasó: formato, ESLint, TypeScript, 22 pruebas, 57 archivos Markdown/11 IDs y build Next.js. El shell usa ahora `medianAskingPrice`, muestra la ausencia sin cero y mantiene Quick/Target/Premium, Maximum Buy y liquidez como no calculados.
+
+MVP-A1 comenzó sin cerrar FND-007. La cohorte `comparable-cohort-v0.1.0` elige el último snapshot anterior al corte antes de aplicar condición, tipo de precio, moneda y calidad, evitando reactivar evidencia antigua. `MarketPriceEstimate v0.1.0` expone suficiencia, estimación central nullable, cuartiles/IQR, inputs, cobertura descriptiva y exclusiones; permanece `DEMO` y no constituye Market Value, precio realizable ni recomendación. MI-002 y MI-003 quedan completados; MI-006 sigue en progreso hasta persistir su histórico.
 
 ## Problems / Risks
 
@@ -113,7 +122,7 @@ La validación `pnpm check` del 2026-08-19 pasó: formato, ESLint, TypeScript, 1
 
 1. Comprobar una fuente real permitida para cerrar FND-007.
 2. Refinar DA-002, MI-001 y MI-006 para dejar MVP-A1 en Definition of Ready.
-3. Materializar `MarketPriceEstimate` sin llamar Market Value a una cohorte `ASKING`.
+3. Persistir importación manual y ejecuciones `MarketPriceEstimate` sin reinterpretar el schema Foundation `0.1.0`.
 4. Seleccionar el caso real y ejecutar B1 cuando exista evidencia permitida.
 5. Activar Platform Access antes de datos reales multiusuario, no antes del primer ciclo DEMO/manual.
 

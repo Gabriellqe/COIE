@@ -72,11 +72,9 @@ export default async function DashboardPage() {
           <article className="kpi-card">
             <span className="kpi-label">Mediana ASKING</span>
             <strong>
-              {medianAskingPrice === undefined
-                ? "—"
-                : clp.format(medianAskingPrice)}
+              {medianAskingPrice == null ? "—" : clp.format(medianAskingPrice)}
             </strong>
-            <small>usado · precio pedido · no es Market Value</small>
+            <small>usado · precio pedido · no es valor realizable</small>
           </article>
           <article className="kpi-card caution">
             <span className="kpi-label">Score</span>
@@ -122,7 +120,17 @@ export default async function DashboardPage() {
                       </small>
                     </td>
                     <td>{opportunity.type}</td>
-                    <td>{clp.format(opportunity.medianAskingPrice)}</td>
+                    <td>
+                      {opportunity.medianAskingPrice === null
+                        ? "—"
+                        : clp.format(opportunity.medianAskingPrice)}
+                      {opportunity.marketEvidenceStatus ===
+                        "INSUFFICIENT_DATA" && (
+                        <small className="table-subtitle">
+                          Datos insuficientes
+                        </small>
+                      )}
+                    </td>
                     <td>{opportunity.sampleSize} comparables</td>
                     <td>
                       <span className="status neutral">No calibrado</span>
