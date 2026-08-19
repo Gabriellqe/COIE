@@ -22,7 +22,7 @@ updated: 2026-08-19
 | FND-004 | Arquitectura y datos | P0 | DONE | límites y modelos documentados |
 | FND-005 | Scoring candidato | P0 | DONE | pesos/gates/cobertura no calibrados |
 | FND-006 | Mercado/moneda | P0 | DONE | Chile/CLP aceptado |
-| FND-007 | Primera fuente permitida | P0 | IN_PROGRESS | acceso/campos/retención comprobados |
+| FND-007 | Primer mecanismo real permitido | P0 | DONE | aporte manual autorizado, campos y retención comprobados; fuente `MANUAL_ONLY` |
 | FND-008 | Stack/persistencia | P0 | DONE | ADR aceptado |
 | FND-009 | Esqueleto ejecutable | P0 | DONE | shell A+B y comandos |
 | FND-010 | Fixture/perfil Foundation | P0 | DONE | DEMO parcial validado |
@@ -34,16 +34,17 @@ updated: 2026-08-19
 
 | ID | Épica / historia | Trabajo | Estado |
 |---|---|---|---|
-| DA-001 | EPIC-01 / US-002 | Contrato `CaptureRun` | PLANNED |
-| DA-002 | EPIC-01 / US-001 | Importación manual estructurada | READY |
+| DA-001 | EPIC-01 / US-002 | Contrato `CaptureRun` | DONE |
+| DA-002 | EPIC-01 / US-001 | Importación manual estructurada | DONE |
 | DA-003 | EPIC-01 / US-001 | Primer conector autorizado | BLOCKED |
+| DA-004 | EPIC-01 / US-002 | Correcciones/invalidation append-only | PLANNED |
 | PI-001 | EPIC-02 / US-001 | Entidad Product y aliases | PLANNED |
 | PI-002 | EPIC-02 / US-003 | Normalizar marca/modelo/variante | PLANNED |
 | PI-003 | EPIC-02 / US-003 | Matching con confianza/revisión | PLANNED |
-| MI-001 | EPIC-03 / US-001 | Persistir listing/snapshot/precio | PLANNED |
+| MI-001 | EPIC-03 / US-001 | Persistir listing/snapshot/precio | DONE |
 | MI-002 | EPIC-03 / US-001 | Construir cohorte comparable | DONE |
 | MI-003 | EPIC-03 / US-001 | Estadística robusta y suficiencia | DONE |
-| MI-006 | EPIC-03 / US-001 | Materializar `MarketPriceEstimate` | IN_PROGRESS |
+| MI-006 | EPIC-03 / US-001 | Materializar `MarketPriceEstimate` | DONE |
 
 ## MVP-A2 — Resale Decision
 

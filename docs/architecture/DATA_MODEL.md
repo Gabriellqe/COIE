@@ -216,7 +216,9 @@ Ejecución derivada de una cohorte comparable. Conserva sujeto/producto, mercado
 
 `ASKING` y `SOLD` producen ejecuciones separadas. Sin suficiencia, `central_estimate` es `null` y el estado `INSUFFICIENT_DATA`.
 
-El perfil inicial A1 selecciona primero el último snapshot anterior al corte por listing y luego evalúa elegibilidad; una observación reciente incompatible no reactiva silenciosamente un precio antiguo. La estadística `market-statistics-v0.2.0` usa cuartiles de Tukey, redondeo half-up en CLP y umbral mínimo configurable de tres comparables. La identidad DEMO incorpora definición, umbral, versiones, inputs y exclusiones ordenadas; los datos posteriores al corte quedan fuera del universo de esa ejecución. El cálculo en lectura ya existe; su persistencia histórica permanece en `MI-006`.
+El perfil inicial A1 selecciona primero el último snapshot anterior al corte por listing y luego evalúa elegibilidad; una observación reciente incompatible no reactiva silenciosamente un precio antiguo. La estadística `market-statistics-v0.2.0` usa cuartiles de Tukey, redondeo half-up en CLP y umbral mínimo configurable de tres comparables. La identidad DEMO incorpora definición, umbral, versiones, inputs y exclusiones ordenadas; los datos posteriores al corte quedan fuera del universo de esa ejecución. [[ADR-009]] persiste localmente el histórico de importaciones y estimaciones mediante un envelope separado, sin cambiar el dataset Foundation `0.1.0`.
+
+El envelope `demo-evidence-store-v0.1.0` contiene revisión, dataset validado, recibos de importación y ejecuciones `MarketPriceEstimate`. Cada recibo conserva idempotency key, fingerprint de solicitud, `CaptureRun`, versión, parámetros no secretos —incluido `seller_external_id` o `UNKNOWN` explícito—, resultado, conteos, referencias y timestamps. No es el modelo físico objetivo de Supabase.
 
 ### PricingRecommendation
 

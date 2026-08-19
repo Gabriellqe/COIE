@@ -4,6 +4,9 @@ import { getOpportunityDetail } from "@/application/queries/get-opportunity-deta
 import type { ComparableExclusionReason } from "@/domain/comparable-cohort";
 import { demoOpportunityRepository } from "@/infrastructure/repositories/demo-opportunity-repository";
 
+export const dynamic = "force-dynamic";
+export const runtime = "nodejs";
+
 const clp = new Intl.NumberFormat("es-CL", {
   style: "currency",
   currency: "CLP",
@@ -31,10 +34,13 @@ function formatClp(value: number | null): string {
 
 export default async function OpportunityDetailPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ id: string }>;
+  searchParams: Promise<{ manualEvidence?: string }>;
 }) {
   const { id } = await params;
+  const { manualEvidence } = await searchParams;
   const opportunity = await getOpportunityDetail(demoOpportunityRepository, id);
   if (!opportunity) notFound();
 
@@ -77,6 +83,21 @@ export default async function OpportunityDetailPage({
           </div>
           <span className="demo-pill">DATOS DEMO</span>
         </div>
+
+        {(manualEvidence === "created" || manualEvidence === "duplicate") && (
+          <div className="success-banner" role="status">
+            <strong>
+              {manualEvidence === "created"
+                ? "Evidencia DEMO guardada"
+                : "Duplicado detectado"}
+            </strong>
+            <span>
+              {manualEvidence === "created"
+                ? "El histórico y la estimación trazable fueron actualizados."
+                : "No se creó una observación repetida; la captura quedó auditada."}
+            </span>
+          </div>
+        )}
 
         <div className="filter-row">
           <span className="filter-chip">Chile</span>

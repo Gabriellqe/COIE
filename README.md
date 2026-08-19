@@ -27,11 +27,13 @@ El Sprint 0 incluye un shell web A+B:
 
 - dashboard operativo A en `/`;
 - detalle analítico B en `/opportunities/opportunity-demo-001`;
+- formulario de carga manual DEMO en `/market-evidence/new`;
 - fixture canónico DEMO sin credenciales ni red;
 - Market Evidence DEMO con cohorte explicada, suficiencia, IQR, inputs y exclusiones;
+- persistencia local append-only en `.data/demo-evidence.json`;
 - validación de contratos, documentación y build.
 
-El shell materializa en lectura un `MarketPriceEstimate` DEMO `USED/ASKING/CLP`; no lo presenta como valor realizable y todavía no calcula Quick/Target/Premium, Maximum Buy, liquidez, economía ni score calibrado. La importación manual y la persistencia histórica de estas ejecuciones siguen pendientes.
+El shell materializa y conserva históricamente un `MarketPriceEstimate` DEMO `USED/ASKING/CLP`; no lo presenta como valor realizable y todavía no calcula Quick/Target/Premium, Maximum Buy, liquidez, economía ni score calibrado. El almacén local sobrevive reinicios, pero no es apto para Vercel, multiproceso ni datos reales.
 
 ### Requisitos
 
@@ -53,7 +55,7 @@ Abrir `http://localhost:3000`.
 pnpm check
 ```
 
-El comando ejecuta formato, lint, tipos, pruebas, enlaces documentales y build de producción. Sprint 0 funciona sin Supabase; las variables objetivo están documentadas en `.env.example`.
+El comando ejecuta formato, lint, tipos, pruebas, enlaces documentales y build de producción. Sprint 0 funciona sin Supabase; el proyecto remoto existe, pero su integración se difiere hasta activar Auth/RLS.
 
 ## Documentación principal
 

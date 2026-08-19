@@ -81,6 +81,8 @@ Una salida no calculada se muestra como desconocida junto con su motivo. El shel
 
 La primera interfaz es web. Durante Foundation consume un repositorio DEMO mediante los mismos puertos que utilizará la persistencia real.
 
+En MVP-A1 el adaptador definido por [[ADR-009]] usa un archivo JSON local ignorado por Git, validación runtime y escritura atómica. Es un mecanismo de desarrollo de un solo proceso, no almacenamiento para Vercel ni sustituto de Supabase/RLS.
+
 ### 5.2 Identity & Access
 
 - Supabase Auth será el proveedor de identidad cuando se active Platform Access.

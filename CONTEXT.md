@@ -40,7 +40,7 @@ Las estrategias, los sujetos y las capacidades son dimensiones distintas. Ver [[
 
 - Mercado: Chile (`CL`), moneda `CLP`, presentación `America/Santiago`, persistencia UTC.
 - Caso inicial: `RESALE` de un repuesto usado asociado a NK150; fixtures `DEMO`.
-- Adquisición: carga manual trazable; fuentes reales pendientes de autorización.
+- Adquisición: carga manual trazable; primer aporte real `MANUAL_ONLY` aceptado por [[ADR-010]], sin autorización de automatización.
 - Stack: Next.js, React, TypeScript y PostgreSQL/Supabase como objetivo; adaptador DEMO sin red.
 - Interfaz: shell A+B, no dashboard productivo completo.
 - Perfil canónico actual: `opportunityType + productId`; migración futura versionada a `strategy + subject`.
@@ -48,7 +48,7 @@ Las estrategias, los sujetos y las capacidades son dimensiones distintas. Ver [[
 
 ## Objetivo inmediato
 
-Cerrar Sprint 0 resolviendo FND-007 y preparar MVP-A1:
+Completar las puertas restantes de Sprint 0 y continuar MVP-A1:
 
 ```text
 Producto/publicación RESALE
@@ -107,16 +107,20 @@ MVP-A3 Experimentation Lite
 - estadísticas de cohorte `USED/ASKING/CLP`;
 - cohorte explicada por último snapshot, fecha de corte y exclusiones;
 - `MarketPriceEstimate` DEMO calculado en lectura con suficiencia, IQR, inputs y versión;
+- carga manual DEMO validada, idempotente y append-only;
+- almacén local DEMO con recibos de captura y `MarketPriceEstimate` histórico;
 - procedencia, histórico, workspace y score no calibrado.
 
 ### Documentado, no implementado
 
 - sujetos `LISTING`, `NICHE`, `SUPPLY_ROUTE`, `PRODUCT_SET` nativos;
-- persistencia histórica de importaciones manuales y `MarketPriceEstimate`;
+- persistencia Supabase/PostgreSQL y operación multiproceso;
+- correcciones/invalidation auditables sobre observaciones ya persistidas;
 - pricing `QUICK/TARGET/PREMIUM`;
 - `MaximumBuyPrice` y liquidez calculados;
 - reposición, grafo de productos, estacionalidad y learning;
 - Supabase Auth/RLS y conectores reales.
+- promoción de evidencia REAL en cuarentena a un almacén canónico, con revisión humana y aislamiento apropiado.
 
 ## Clasificación de nueva información
 
@@ -152,7 +156,8 @@ MVP-A3 Experimentation Lite
 
 ## Bloqueos conocidos
 
-- primera fuente real con mecanismo permitido;
+- revisión de condición, variante, cantidad y precios de la primera captura manual real;
+- ejecución del vencimiento/renovación de retención el `2026-11-17`;
 - ejecución B1 con una pieza/variante real;
 - umbrales de frescura;
 - costos y contribución objetivo para Maximum Buy;

@@ -2,6 +2,9 @@ import Link from "next/link";
 import { listOpportunities } from "@/application/queries/list-opportunities";
 import { demoOpportunityRepository } from "@/infrastructure/repositories/demo-opportunity-repository";
 
+export const dynamic = "force-dynamic";
+export const runtime = "nodejs";
+
 const clp = new Intl.NumberFormat("es-CL", {
   style: "currency",
   currency: "CLP",
@@ -42,9 +45,14 @@ export default async function DashboardPage() {
             <p className="eyebrow">Dashboard operativo A</p>
             <h1>Oportunidades de reventa</h1>
           </div>
-          <div className="user-chip" aria-label="Espacio demostrativo">
-            <span className="avatar">GD</span>
-            <span>Espacio DEMO</span>
+          <div className="topbar-actions">
+            <Link className="primary-button" href="/market-evidence/new">
+              Agregar evidencia DEMO
+            </Link>
+            <div className="user-chip" aria-label="Espacio demostrativo">
+              <span className="avatar">GD</span>
+              <span>Espacio DEMO</span>
+            </div>
           </div>
         </header>
 

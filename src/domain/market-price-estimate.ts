@@ -1,3 +1,4 @@
+import { z } from "zod";
 import type { ComparableCohort } from "@/domain/comparable-cohort";
 
 export type MarketPriceStatistics = {
@@ -14,38 +15,81 @@ export type MarketPriceStatistics = {
   methodVersion: "market-statistics-v0.2.0";
 };
 
-export type MarketPriceEstimate = {
-  id: string;
-  workspaceId: string;
-  productId: string;
-  marketId: string;
-  condition: ComparableCohort["definition"]["condition"];
-  priceType: ComparableCohort["definition"]["priceType"];
-  currency: "CLP";
-  asOf: string;
-  windowStart: string | null;
-  comparableSetDefinition: ComparableCohort["definition"];
-  sampleSize: number;
-  minimumComparableCount: number;
-  statistics: MarketPriceStatistics;
-  centralEstimate: number | null;
-  centralEstimateBasis: "ASKING_MEDIAN" | "SOLD_MEDIAN";
-  status: "CALCULATED" | "INSUFFICIENT_DATA";
-  confidence: "NOT_ASSESSED";
-  confidenceReason: string;
-  coverage: {
-    includedCount: number;
-    excludedCount: number;
-    sourceCount: number;
-  };
-  warnings: string[];
-  calculationVersion: "market-price-estimate-v0.1.0";
-  identityFingerprint: string;
-  inputRefs: string[];
-  exclusions: ComparableCohort["exclusions"];
-  evidenceMode: "DEMO";
-  calculatedAt: string;
-};
+const nullableMoney = z.number().int().nonnegative().nullable();
+const exclusionSchema = z.object({
+  observationId: z.string().min(1),
+  listingId: z.string().min(1),
+  reason: z.enum([
+    "AFTER_CUTOFF",
+    "BEFORE_WINDOW",
+    "SUPERSEDED",
+    "CONDITION_UNKNOWN",
+    "CONDITION_MISMATCH",
+    "PRICE_TYPE_MISMATCH",
+    "CURRENCY_MISMATCH",
+    "QUALITY_EXCLUDED",
+  ]),
+  detail: z.string().nullable(),
+});
+
+export const marketPriceEstimateSchema = z.object({
+  id: z.string().min(1),
+  workspaceId: z.string().min(1),
+  productId: z.string().min(1),
+  marketId: z.string().min(1),
+  condition: z.enum(["NEW", "USED", "REFURBISHED"]),
+  priceType: z.enum(["ASKING", "SOLD"]),
+  currency: z.literal("CLP"),
+  asOf: z.iso.datetime(),
+  windowStart: z.iso.datetime().nullable(),
+  comparableSetDefinition: z.object({
+    workspaceId: z.string().min(1),
+    marketId: z.string().min(1),
+    productId: z.string().min(1),
+    variantKey: z.string(),
+    condition: z.enum(["NEW", "USED", "REFURBISHED"]),
+    priceType: z.enum(["ASKING", "SOLD"]),
+    currency: z.literal("CLP"),
+    asOf: z.iso.datetime(),
+    windowStart: z.iso.datetime().nullable(),
+    latestPerListing: z.literal(true),
+    methodVersion: z.literal("comparable-cohort-v0.1.0"),
+  }),
+  sampleSize: z.number().int().nonnegative(),
+  minimumComparableCount: z.number().int().positive(),
+  statistics: z.object({
+    values: z.array(z.number().int().nonnegative()),
+    sampleSize: z.number().int().nonnegative(),
+    mean: nullableMoney,
+    median: nullableMoney,
+    minimum: nullableMoney,
+    maximum: nullableMoney,
+    range: nullableMoney,
+    q1: nullableMoney,
+    q3: nullableMoney,
+    iqr: nullableMoney,
+    methodVersion: z.literal("market-statistics-v0.2.0"),
+  }),
+  centralEstimate: nullableMoney,
+  centralEstimateBasis: z.enum(["ASKING_MEDIAN", "SOLD_MEDIAN"]),
+  status: z.enum(["CALCULATED", "INSUFFICIENT_DATA"]),
+  confidence: z.literal("NOT_ASSESSED"),
+  confidenceReason: z.string().min(1),
+  coverage: z.object({
+    includedCount: z.number().int().nonnegative(),
+    excludedCount: z.number().int().nonnegative(),
+    sourceCount: z.number().int().nonnegative(),
+  }),
+  warnings: z.array(z.string()),
+  calculationVersion: z.literal("market-price-estimate-v0.1.0"),
+  identityFingerprint: z.string().min(1),
+  inputRefs: z.array(z.string().min(1)),
+  exclusions: z.array(exclusionSchema),
+  evidenceMode: z.literal("DEMO"),
+  calculatedAt: z.iso.datetime(),
+});
+
+export type MarketPriceEstimate = z.infer<typeof marketPriceEstimateSchema>;
 
 function roundHalfUp(value: bigint, divisor: bigint): bigint {
   return (value + divisor / 2n) / divisor;
