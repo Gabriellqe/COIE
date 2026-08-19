@@ -13,14 +13,18 @@ related_foundation: FND-007
 Evaluar cómo puede COIE obtener evidencia de mercado para `RESALE` de repuestos usados en Chile, empezando por Mercado Libre Chile y Facebook Marketplace. La pregunta no es sólo si una URL puede consultarse técnicamente: ¿existe un método permitido, utilizable para inteligencia comercial, con coste, campos, límites y retención conocidos?
 
 **Fecha de consulta:** 2026-08-18.
-**Estado de decisión:** no selecciona ni autoriza un conector. Sustenta `FND-007` y conserva vigente [[ADR-003]].
+**Estado de decisión:** no selecciona ni autoriza un conector. Sustentó `FND-007` y conserva vigente [[ADR-003]]. El addendum del 2026-08-19 está gobernado por [[ADR-010]].
 
 ## Resultado ejecutivo
 
 1. **No se implementará scraping web.** Una página pública no implica permiso de automatización.
 2. **Facebook Marketplace queda excluido de automatización.** Meta exige permiso escrito expreso previo para toda recolección automatizada; no hay un API público de Marketplace identificado para búsqueda de inventario de terceros.
 3. **Mercado Libre Chile es la única vía técnica candidata para un piloto:** API REST oficial, `site_id=MLC`, registro de aplicación y credenciales. Sin embargo, sus términos restringen el uso del contenido/API, el desarrollo de servicios competidores y la divulgación a terceros. Dado que COIE hace análisis de oportunidades y precios, se requiere confirmación escrita de Mercado Libre sobre ese uso antes de activarlo.
-4. Hasta obtener esa confirmación, el único método autorizado en COIE continúa siendo `MANUAL_USER_ENTRY`; no se cambia el estado de `FND-007`.
+4. Hasta obtener esa confirmación, el único método permitido en COIE continúa siendo `MANUAL_USER_ENTRY`. El 2026-08-19 se comprobó este mecanismo con un aporte manual autorizado por el usuario; esto cierra `FND-007` como mecanismo `MANUAL_ONLY`, no como autorización de Meta.
+
+## Addendum 2026-08-19 — aporte manual real
+
+El usuario aportó una extracción manual de Facebook Marketplace, declaró autorización para su tratamiento interno y especificó la hora de captura. [[MANUAL-CAPTURE-FACEBOOK-NK150-2026-08-19]] documenta la minimización, selección y calidad; [[ADR-010]] limita la retención a 90 días y prohíbe reinterpretar el aporte como permiso de automatización. `DA-003` permanece `BLOCKED`.
 
 ## Matriz de fuentes en alcance
 

@@ -19,6 +19,8 @@ Los cambios materiales del proyecto se registran por fecha. El documento sigue u
 - [[ADR-009]] y almacén JSON local DEMO versionado, validado y atómico;
 - formulario `/market-evidence/new`, recibos `CaptureRun`, idempotencia y persistencia append-only;
 - materialización histórica de `MarketPriceEstimate` y lectura dinámica desde el mismo store.
+- [[ADR-010]] y registro minimizado de una captura manual real de Facebook Marketplace para kits NK150;
+- política `MANUAL_ONLY`, cuarentena local, deduplicación y retención de 90 días para evidencia aportada por el usuario.
 
 ### Changed
 
@@ -32,6 +34,7 @@ Los cambios materiales del proyecto se registran por fecha. El documento sigue u
 - `TESTING → RESEARCHING` permite resultados inconclusos o reformulación;
 - scoring `RESALE` permanece candidato no calibrado; Replenishment queda como perfil futuro.
 - el detalle analítico muestra Market Evidence, fecha de corte, inputs y exclusiones sin presentar ASKING como valor realizable.
+- FND-007 se cierra como primer mecanismo real permitido de aporte manual; no como autorización de Meta ni de un conector.
 
 ### Not implemented
 
@@ -43,7 +46,7 @@ Los cambios materiales del proyecto se registran por fecha. El documento sigue u
 
 ### Open
 
-- FND-007: primera fuente real permitida;
+- revisión de condición, variante, cantidad y precios del caso real NK150 en cuarentena;
 - B1: caso NK150 real;
 - inputs y política para Maximum Buy;
 - evidencia de velocidad/liquidez y límites de experimento.

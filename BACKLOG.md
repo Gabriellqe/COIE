@@ -22,7 +22,7 @@ updated: 2026-08-19
 | FND-004 | Arquitectura y datos | P0 | DONE | límites y modelos documentados |
 | FND-005 | Scoring candidato | P0 | DONE | pesos/gates/cobertura no calibrados |
 | FND-006 | Mercado/moneda | P0 | DONE | Chile/CLP aceptado |
-| FND-007 | Primera fuente permitida | P0 | IN_PROGRESS | acceso/campos/retención comprobados |
+| FND-007 | Primer mecanismo real permitido | P0 | DONE | aporte manual autorizado, campos y retención comprobados; fuente `MANUAL_ONLY` |
 | FND-008 | Stack/persistencia | P0 | DONE | ADR aceptado |
 | FND-009 | Esqueleto ejecutable | P0 | DONE | shell A+B y comandos |
 | FND-010 | Fixture/perfil Foundation | P0 | DONE | DEMO parcial validado |

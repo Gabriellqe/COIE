@@ -26,7 +26,7 @@ Preparar una base documental y técnica coherente para comenzar MVP-A Resale Dec
 ### Decisiones del primer incremento
 
 - [x] FND-006 — Elegir mercado, país y moneda base.
-- [ ] FND-007 — Elegir primera fuente autorizada y comprobar acceso/campos. `IN_PROGRESS`
+- [x] FND-007 — Comprobar el primer mecanismo real permitido, sus campos y retención. `DONE`; aporte manual `MANUAL_ONLY`, no autorización de plataforma.
 - [x] FND-008 — Elegir stack, persistencia e interfaz inicial mediante ADR.
 
 ### Base técnica
@@ -60,7 +60,7 @@ Preparar una base documental y técnica coherente para comenzar MVP-A Resale Dec
 
 - [x] Todos los enlaces internos críticos resuelven.
 - [x] No hay contradicciones críticas entre PRD, arquitectura, datos y scoring.
-- [ ] Mercado, fuente y stack iniciales tienen ADR aceptado.
+- [x] Mercado, mecanismo de adquisición y stack iniciales tienen ADR aceptado.
 - [x] El proyecto se instala/ejecuta con instrucciones reproducibles.
 - [x] Los tests básicos y validadores pasan desde un entorno limpio.
 - [x] El fixture cubre producto, listing, observación de precio y oportunidad.
@@ -100,15 +100,17 @@ MVP-A1 comenzó sin cerrar FND-007. La cohorte `comparable-cohort-v0.1.0` elige 
 
 [[ADR-009]] añade el flujo `/market-evidence/new`: valida una carga exclusivamente DEMO, deriva workspace/fuente/método en servidor, registra `CaptureRun`, detecta reintentos/duplicados/conflictos, agrega snapshots y observaciones sin sobrescribir y persiste la estimación resultante. El almacén JSON local se valida completo, serializa escrituras y sobrevive reinicios; DA-001, DA-002, MI-001 y MI-006 quedan completados para el perfil local DEMO.
 
+El 2026-08-19 el usuario aportó una extracción manual autorizada de Facebook Marketplace para kits de arrastre/transmisión NK150. [[ADR-010]] acepta el mecanismo `USER_PROVIDED_MANUAL_EXPORT → MANUAL_USER_ENTRY`, con Facebook sólo como procedencia `MANUAL_ONLY`. Se aislaron localmente 16 listings únicos, se suprimieron dos duplicados y se descartaron las URLs de imágenes. Ninguna fila es comparable todavía: condición, variante y cantidad permanecen desconocidas, y nueve precios son placeholders o anómalos. FND-007 queda completado sin habilitar `DA-003`, scraping ni conectores.
+
 ## Problems / Risks
 
-- Mercado Libre Chile y Facebook Marketplace son fuentes candidatas, pero falta comprobar un mecanismo autorizado, términos, campos y retención.
+- No existe autorización de plataforma para automatizar Mercado Libre Chile o Facebook Marketplace; sólo está permitido el aporte manual documentado.
 - El proyecto Supabase existe y está saludable, pero no tiene schema/Auth/RLS integrados; MVP-A1 continúa con el adaptador local DEMO sin credenciales.
-- Falta un repuesto/variante NK150 real para ejecutar el benchmark B1.
+- Existe un caso NK150 real en cuarentena, pero faltan condición, variante, cantidad y precios revisados para ejecutar B1.
 - El benchmark B0 está `PARTIAL`; faltan moneda alternativa, gates y economía desconocida antes de aprobar su matriz completa.
 - Los pesos de scoring son una hipótesis sin calibración real.
 - El fixture actual permite estadísticas `ASKING`, pero no Quick Sale, Maximum Buy, liquidez ni economía responsable.
-- Sprint 0 no puede cerrarse mientras FND-007 y las puertas asociadas a una fuente real permitida sigan pendientes.
+- Sprint 0 continúa abierto hasta que el backlog del siguiente sprint cumpla Definition of Ready y se realice Review/Retrospective.
 
 ## Decisions
 
@@ -121,15 +123,16 @@ MVP-A1 comenzó sin cerrar FND-007. La cohorte `comparable-cohort-v0.1.0` elige 
 - [[ADR-007]] — Evidencia de mercado, pricing y máximo de compra separados.
 - [[ADR-008]] — Platform Access diferido del primer ciclo comercial.
 - [[ADR-009]] — Persistencia local DEMO append-only para MVP-A1.
+- [[ADR-010]] — Aporte manual real, aislamiento y retención mínima.
 
 ## Next Actions
 
-1. Comprobar una fuente real permitida para cerrar FND-007.
+1. Revisar condición, composición, variante, cantidad y precios del caso NK150 en cuarentena.
 2. Completar la matriz B0 con gates y economía desconocida.
-3. Diseñar DA-004 para correcciones/invalidation append-only antes de importar archivos externos.
-4. Seleccionar el caso real y ejecutar B1 cuando exista evidencia permitida.
+3. Diseñar DA-004 para correcciones/invalidation append-only antes de promover archivos externos.
+4. Ejecutar B1 sólo cuando exista una cohorte real elegible y reproducible.
 5. Preparar MVP-A2: PricingRecommendation, Maximum Buy y Economics Core manual.
-6. Activar Platform Access antes de datos reales multiusuario, no antes del primer ciclo DEMO/manual.
+6. Activar Platform Access antes de datos reales multiusuario y antes de persistir evidencia REAL en Supabase.
 
 ## Review
 

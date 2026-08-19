@@ -13,6 +13,7 @@ Las decisiones que cambian arquitectura, alcance, datos, seguridad o forma de tr
 - [[ADR-007]] — Separar evidencia de mercado, pricing y precio máximo de compra — `Accepted`.
 - [[ADR-008]] — Diferir Platform Access del primer ciclo comercial — `Accepted`.
 - [[ADR-009]] — Persistencia local DEMO append-only para MVP-A1 — `Accepted`.
+- [[ADR-010]] — Evidencia real aportada manualmente con retención mínima — `Accepted`.
 
 ## Estados
 
